@@ -1,7 +1,7 @@
 import { PostEditor } from "@/components/admin/PostEditor";
 import { requirePermission } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
-
+export const instant = false;
 export const metadata = {
   title: "New post",
   robots: { index: false, follow: false },

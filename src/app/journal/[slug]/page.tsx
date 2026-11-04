@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { connection } from "next/server";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Article } from "@/components/pages/JournalPages";
+
+import { CmsStandalonePage } from "@/components/content/CmsStandalonePage";
 import {
   extractMarkdownHeadings,
   MarkdownContent,
 } from "@/components/content/MarkdownContent";
+import { Contact } from "@/components/pages/ContactPage";
+import { Article } from "@/components/pages/JournalPages";
 import { getPrisma } from "@/lib/prisma";
-import { CmsStandalonePage } from "@/components/content/CmsStandalonePage";
 
 const articles = [
   {
@@ -25,6 +28,51 @@ const articles = [
   },
 ];
 
+type FixedPostContent = {
+  format: "fixed-post-v1";
+  introHeading: string;
+  introText: string;
+  introImage: {
+    url: string;
+    alt: string;
+    caption: string;
+  };
+  body: string;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function parseFixedContent(value: unknown): FixedPostContent | null {
+  if (!isRecord(value) || value.format !== "fixed-post-v1") {
+    return null;
+  }
+
+  const image = isRecord(value.introImage) ? value.introImage : {};
+
+  return {
+    format: "fixed-post-v1",
+    introHeading:
+      typeof value.introHeading === "string" ? value.introHeading : "",
+    introText: typeof value.introText === "string" ? value.introText : "",
+    introImage: {
+      url: typeof image.url === "string" ? image.url : "",
+      alt: typeof image.alt === "string" ? image.alt : "",
+      caption: typeof image.caption === "string" ? image.caption : "",
+    },
+    body: typeof value.body === "string" ? value.body : "",
+  };
+}
+
+function getLegacyText(value: unknown) {
+  if (!isRecord(value) || typeof value.text !== "string") {
+    return "";
+  }
+
+  return value.text;
+}
+
 export function generateStaticParams() {
   return articles.map(({ slug }) => ({ slug }));
 }
@@ -34,18 +82,28 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  await connection();
+
   const { slug } = await params;
+  const now = new Date();
   const db = getPrisma();
+
   const managed = db
     ? await db.post.findFirst({
-        where: { slug, status: "PUBLISHED", publishedAt: { lte: new Date() } },
+        where: {
+          slug,
+          status: "PUBLISHED",
+          publishedAt: { lte: now },
+        },
         include: { seo: true },
       })
     : null;
+
   if (managed) {
     const canonical =
       managed.seo?.canonicalUrl ||
       `${process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"}/journal/${managed.slug}`;
+
     return {
       title: managed.seo?.title || managed.title,
       description: managed.seo?.description || managed.excerpt,
@@ -79,13 +137,18 @@ export async function generateMetadata({
       },
     };
   }
+
   const page = db
     ? await db.page.findFirst({
-        where: { slug: `journal/${slug}`, status: "PUBLISHED" },
+        where: {
+          slug: `journal/${slug}`,
+          status: "PUBLISHED",
+        },
         include: { seo: true },
       })
     : null;
-  if (page)
+
+  if (page) {
     return {
       title: page.seo?.title || page.title,
       description: page.seo?.description || undefined,
@@ -99,6 +162,8 @@ export async function generateMetadata({
         follow: page.seo?.robotsFollow ?? true,
       },
     };
+  }
+
   const article = articles.find((item) => item.slug === slug);
 
   return {
@@ -113,26 +178,31 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  await connection();
+
   const { slug } = await params;
+  const now = new Date();
   const db = getPrisma();
+
   const post = db
     ? await db.post.findFirst({
-        where: { slug, status: "PUBLISHED", publishedAt: { lte: new Date() } },
+        where: {
+          slug,
+          status: "PUBLISHED",
+          publishedAt: { lte: now },
+        },
         include: {
           featuredMedia: true,
           author: { select: { name: true } },
-          categories: { include: { category: true } },
         },
       })
     : null;
+
   if (post) {
-    const content =
-      post.content &&
-      typeof post.content === "object" &&
-      !Array.isArray(post.content) &&
-      "text" in post.content
-        ? String(post.content.text)
-        : "";
+    const fixedContent = parseFixedContent(post.content);
+    const legacyContent = getLegacyText(post.content);
+    const articleBody = fixedContent?.body || legacyContent;
+
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
@@ -140,97 +210,115 @@ export default async function Page({
       description: post.excerpt,
       datePublished: post.publishedAt?.toISOString(),
       dateModified: post.updatedAt.toISOString(),
-      author: { "@type": "Person", name: post.author.name },
-      mainEntityOfPage: `${process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"}/journal/${post.slug}`,
+      author: {
+        "@type": "Person",
+        name: post.author.name,
+      },
+      mainEntityOfPage: `${
+        process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"
+      }/journal/${post.slug}`,
     };
-    const headings = extractMarkdownHeadings(content).filter(
+
+    const headings = extractMarkdownHeadings(articleBody).filter(
       (heading) => heading.depth === 2,
     );
-    const category = post.categories[0]?.category.name;
+
     return (
-      <main>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c"),
-          }}
-        />
-        <div className="breadcrumbs">
-          <Link href="/">Home</Link>
-          <span>/</span>
-          <Link href="/journal">Journal</Link>
-          <span>/</span>
-          {post.title}
-        </div>
-        <article className="article-page cms-article-page">
-          <header>
-            {category && (
-              <span className="cms-article-category">{category}</span>
-            )}
-            <h1>{post.title}</h1>
-            {post.excerpt && <p>{post.excerpt}</p>}
-            <div className="cms-article-byline">
-              <span>Words by {post.author.name}</span>
-              <span aria-hidden="true" />
-              <span>{post.readingMinutes} minute read</span>
-            </div>
-          </header>
-          {post.featuredMedia && (
-            <figure className="cms-article-cover-wrap">
-              <Image
-                className="article-cover"
-                src={post.featuredMedia.url}
-                alt={post.featuredMedia.alt || post.title}
-                width={1400}
-                height={850}
-                unoptimized
-                priority
-              />
-              {post.featuredMedia.caption && (
-                <figcaption>{post.featuredMedia.caption}</figcaption>
-              )}
-            </figure>
-          )}
-          <div className="cms-article-layout">
-            {headings.length > 1 && (
-              <nav aria-label="In this article" className="cms-article-toc">
-                <span>IN THIS GUIDE</span>
-                <ol>
-                  {headings.map((heading, index) => (
-                    <li key={heading.id}>
-                      <a href={`#${heading.id}`}>
-                        <span>{String(index + 1).padStart(2, "0")}</span>
-                        {heading.title}
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-              </nav>
-            )}
-            <div className="article-body">
-              <MarkdownContent source={content} />
-            </div>
+      <>
+        <main className="simple-post-page">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c"),
+            }}
+          />
+
+          <div className="simple-post-breadcrumbs">
+            <Link href="/">Home</Link>
+            <span>/</span>
+            <Link href="/journal">Journal</Link>
+            <span>/</span>
+            <span>{post.title}</span>
           </div>
-          <footer className="cms-article-endcap">
-            <div>
-              <span>CONTINUE YOUR JOURNEY</span>
-              <h2>Thoughtful guidance for your time in Kashi.</h2>
+
+          <article className="simple-post">
+            <header className="simple-post-header">
+              <h1>{post.title}</h1>
+
+              <div className="simple-post-divider">
+                <span />
+                <span>✦</span>
+                <span />
+              </div>
+            </header>
+
+            <div className="simple-post-content">
+              {fixedContent?.introImage.url && (
+                <figure className="simple-post-image">
+                  <Image
+                    src={fixedContent.introImage.url}
+                    alt={fixedContent.introImage.alt || post.title}
+                    width={700}
+                    height={700}
+                    unoptimized
+                    priority
+                  />
+
+                  {fixedContent.introImage.caption && (
+                    <figcaption>{fixedContent.introImage.caption}</figcaption>
+                  )}
+                </figure>
+              )}
+
+              <div className="simple-post-body">
+                {fixedContent?.introHeading && (
+                  <h2>{fixedContent.introHeading}</h2>
+                )}
+
+                {fixedContent?.introText && (
+                  <MarkdownContent source={fixedContent.introText} />
+                )}
+
+                {articleBody && <MarkdownContent source={articleBody} />}
+              </div>
             </div>
-            <div className="cms-article-endcap-links">
-              <Link href="/pitru-rituals">Explore Pitru Karya ↗</Link>
-              <Link href="/contact">Speak with a guide ↗</Link>
-            </div>
-          </footer>
-        </article>
-      </main>
+
+            {headings.length > 0 && (
+              <div className="sr-only">
+                {headings.map((heading) => (
+                  <span key={heading.id}>{heading.title}</span>
+                ))}
+              </div>
+            )}
+          </article>
+        </main>
+
+        <Contact hideHero />
+      </>
     );
   }
+
   const cmsPage = db
     ? await db.page.findFirst({
-        where: { slug: `journal/${slug}`, status: "PUBLISHED" },
+        where: {
+          slug: `journal/${slug}`,
+          status: "PUBLISHED",
+        },
       })
     : null;
-  if (cmsPage) return <CmsStandalonePage pageSlug={`journal/${slug}`} />;
-  if (!articles.some((article) => article.slug === slug)) notFound();
+
+  if (cmsPage) {
+    return (
+      <>
+        <CmsStandalonePage pageSlug={`journal/${slug}`} />
+        <Contact hideHero />
+      </>
+    );
+  }
+
+  if (!articles.some((article) => article.slug === slug)) {
+    notFound();
+  }
+
   return <Article slug={slug} />;
 }

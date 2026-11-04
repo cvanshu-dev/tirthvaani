@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { JournalBrowser } from "@/components/site";
 import { CTASection } from "../sections/CTASection";
 import { Eyebrow, SectionHeading, ImageBlock } from "../shared";
+import { Contact } from "./ContactPage";
 
 const articles = [
   {
@@ -30,6 +31,7 @@ const articles = [
 
 export function Journal() {
   return (
+     <>
     <main>
       <section className="journal-hero section-pad">
         <Eyebrow>NOTES FOR THE JOURNEY</Eyebrow>
@@ -68,6 +70,8 @@ export function Journal() {
       </section>
       <CTASection />
     </main>
+    <Contact />
+    </>
   );
 }
 export function Article({ slug }: { slug: string }) {

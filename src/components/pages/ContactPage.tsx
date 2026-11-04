@@ -6,10 +6,12 @@ import {
   Phone,
 } from "lucide-react";
 
-export function Contact() {
+export function Contact({ hideHero = false }: { hideHero?: boolean }) {
   return (
     <main className="overflow-hidden bg-[#faf3ea] text-[#35281e]">
       {/* Hero */}
+
+      {!hideHero && (
       <section className="relative border-b border-[#d8c09f]/40 px-5 py-20 text-center md:px-12 lg:px-24 lg:py-28">
         <div className="absolute left-1/2 top-0 h-full w-px bg-[#bd9068]/20" />
 
@@ -31,6 +33,7 @@ export function Contact() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Contact content */}
       <section className="relative px-5 py-20 md:px-12 lg:px-24 lg:py-32">

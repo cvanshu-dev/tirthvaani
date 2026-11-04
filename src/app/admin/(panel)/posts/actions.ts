@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requirePermission } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 
 const schema = z.object({
   id: z.string().optional(),
@@ -17,7 +18,7 @@ const schema = z.object({
     .max(180)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   excerpt: z.string().trim().max(500),
-  body: z.string().trim().min(1).max(100_000),
+  body: z.string().trim().min(1).max(200_000),
   status: z.enum(["DRAFT", "PUBLISHED", "SCHEDULED", "ARCHIVED"]),
   scheduledAt: z.string().optional(),
   featured: z.boolean(),
@@ -108,7 +109,83 @@ export async function savePostAction(formData: FormData) {
   }
   const publishedAt =
     status === "PUBLISHED" ? (previous?.publishedAt ?? new Date()) : null;
-  const body = { format: "plain-text-v1", text: values.body };
+let body: Prisma.InputJsonValue;
+
+try {
+  const parsedBody: unknown = JSON.parse(values.body);
+
+  if (
+    !parsedBody ||
+    typeof parsedBody !== "object" ||
+    Array.isArray(parsedBody) ||
+    !("format" in parsedBody) ||
+    parsedBody.format !== "fixed-post-v1" ||
+    !("introHeading" in parsedBody) ||
+    typeof parsedBody.introHeading !== "string" ||
+    !("introText" in parsedBody) ||
+    typeof parsedBody.introText !== "string" ||
+    !("introImage" in parsedBody) ||
+    !parsedBody.introImage ||
+    typeof parsedBody.introImage !== "object" ||
+    Array.isArray(parsedBody.introImage) ||
+    !("url" in parsedBody.introImage) ||
+    typeof parsedBody.introImage.url !== "string" ||
+    !("alt" in parsedBody.introImage) ||
+    typeof parsedBody.introImage.alt !== "string" ||
+    !("caption" in parsedBody.introImage) ||
+    typeof parsedBody.introImage.caption !== "string" ||
+    !("body" in parsedBody) ||
+    typeof parsedBody.body !== "string"
+  ) {
+    throw new Error("Invalid fixed post content");
+  }
+
+  body = {
+    format: "fixed-post-v1",
+    introHeading: parsedBody.introHeading,
+    introText: parsedBody.introText,
+    introImage: {
+      url: parsedBody.introImage.url,
+      alt: parsedBody.introImage.alt,
+      caption: parsedBody.introImage.caption,
+    },
+    body: parsedBody.body,
+  };
+} catch {
+  redirect(
+    values.id
+      ? `/admin/posts/${values.id}?error=validation`
+      : "/admin/posts/new?error=validation",
+  );
+}
+
+try {
+  const parsedBody: unknown = JSON.parse(values.body);
+
+  if (
+    !parsedBody ||
+    typeof parsedBody !== "object" ||
+    Array.isArray(parsedBody) ||
+    !("format" in parsedBody) ||
+    parsedBody.format !== "blocks-v1" ||
+    !("blocks" in parsedBody) ||
+    !Array.isArray(parsedBody.blocks) ||
+    parsedBody.blocks.length === 0
+  ) {
+    throw new Error("Invalid block content");
+  }
+
+  body = {
+    format: "blocks-v1",
+    blocks: parsedBody.blocks,
+  };
+} catch {
+  redirect(
+    values.id
+      ? `/admin/posts/${values.id}?error=validation`
+      : "/admin/posts/new?error=validation",
+  );
+}
 
   const post = await db.$transaction(async (tx) => {
     const saved = previous
