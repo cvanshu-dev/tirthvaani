@@ -1,0 +1,729 @@
+
+/* =====================================================
+   TIRTHVAANI — RITUAL SERVICES
+   Desktop: Heading on top, two cards side by side
+   Mobile: Cards stacked
+===================================================== */
+
+.ritual-showcase {
+  --ritual-cream: #f8f1e9;
+  --ritual-paper: #fbf6f0;
+  --ritual-ink: #30251e;
+  --ritual-muted: #66584e;
+  --ritual-copper: #a95731;
+  --ritual-gold: #bd8b60;
+
+  position: relative !important;
+  isolation: isolate;
+  display: block !important;
+
+  /* Break out of constrained parent containers */
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
+
+  min-height: auto !important;
+  padding: 65px 0 75px !important;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(249, 241, 233, 0.82) 55%,
+      rgba(242, 229, 216, 0.8) 100%
+    ),
+    var(--ritual-cream);
+}
+
+/* =====================================================
+   BACKGROUND DECORATIONS
+===================================================== */
+
+.ritual-showcase::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  width: min(1050px, 85vw);
+  aspect-ratio: 1;
+
+  border: 1px solid rgba(185, 133, 91, 0.2);
+  border-radius: 50%;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+.ritual-showcase::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  inset: 25% 3.5%;
+
+  border-top: 1px solid rgba(185, 133, 91, 0.15);
+  border-bottom: 1px solid rgba(185, 133, 91, 0.15);
+
+  pointer-events: none;
+}
+
+.ritual-showcase-decoration {
+  position: absolute;
+  z-index: -1;
+
+  left: 50%;
+  width: 330px;
+  height: 330px;
+
+  transform: translateX(-50%);
+  opacity: 0.2;
+
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0 23%,
+    var(--ritual-gold) 23.2% 23.5%,
+    transparent 23.8%
+  );
+}
+
+.ritual-decoration-top {
+  top: -155px;
+}
+
+.ritual-decoration-bottom {
+  bottom: -155px;
+}
+
+/* Central ornamental line */
+
+.ritual-showcase-center {
+  position: absolute;
+  z-index: -1;
+
+  top: 0;
+  bottom: 0;
+  left: 50%;
+
+  width: 1px;
+  background: rgba(174, 117, 72, 0.35);
+
+  pointer-events: none;
+}
+
+.ritual-center-line {
+  position: absolute;
+  top: 13%;
+  bottom: 13%;
+  left: 0;
+
+  width: 1px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(174, 117, 72, 0.4) 20%,
+    rgba(174, 117, 72, 0.4) 80%,
+    transparent
+  );
+}
+
+.ritual-center-diamond {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+
+  width: 9px;
+  height: 9px;
+
+  background: #bd9068;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.ritual-center-diamond-bottom {
+  top: auto;
+  bottom: 30px;
+}
+
+/* Soft botanical details */
+
+.ritual-showcase-leaf {
+  position: absolute;
+  z-index: -1;
+
+  width: 180px;
+  height: 180px;
+
+  opacity: 0.35;
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse at 20% 20%,
+    rgba(91, 103, 61, 0.5),
+    rgba(91, 103, 61, 0.08) 48%,
+    transparent 70%
+  );
+
+  filter: blur(15px);
+}
+
+.ritual-leaf-left {
+  top: -55px;
+  left: -65px;
+}
+
+.ritual-leaf-right {
+  right: -70px;
+  bottom: -65px;
+}
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
+.ritual-showcase .ritual-layout-shell {
+  position: relative;
+  z-index: 2;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+
+  width: min(1390px, calc(100vw - 80px)) !important;
+  max-width: 1390px !important;
+
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* Heading above cards */
+
+.ritual-showcase .ritual-layout-heading {
+  display: block !important;
+  position: relative;
+
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 0 34px !important;
+  padding: 0 !important;
+
+  text-align: center !important;
+}
+
+.ritual-showcase .ritual-layout-heading h2 {
+  display: block !important;
+
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto !important;
+
+  color: var(--ritual-ink);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 400;
+
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+}
+
+/* =====================================================
+   TWO-COLUMN GRID — MAIN FIX
+===================================================== */
+
+.ritual-showcase .ritual-layout-grid {
+  position: relative;
+
+  display: grid !important;
+
+  /* Explicitly two equal columns */
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-template-rows: auto !important;
+  grid-auto-flow: row !important;
+
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+
+  gap: 28px !important;
+
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.ritual-showcase .ritual-layout-grid > .ritual-showcase-card {
+  position: relative !important;
+
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr) !important;
+
+  grid-column: auto !important;
+  grid-row: auto !important;
+
+  float: none !important;
+  transform: none !important;
+
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+
+  height: 440px !important;
+  min-height: 440px !important;
+  max-height: 440px !important;
+
+  margin: 0 !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid rgba(183, 140, 105, 0.3);
+  border-radius: 27px;
+
+  background: rgba(251, 246, 240, 0.94);
+
+  box-shadow:
+    0 15px 45px rgba(85, 58, 38, 0.08),
+    0 2px 8px rgba(85, 58, 38, 0.035);
+}
+
+/* =====================================================
+   CARD CONTENT
+===================================================== */
+
+.ritual-showcase .ritual-layout-grid .ritual-showcase-copy {
+  position: relative;
+  z-index: 2;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+
+  min-width: 0;
+
+  padding: 32px 18px 32px 36px;
+  overflow: hidden;
+}
+
+/* Symbols */
+
+.ritual-showcase .ritual-showcase-symbol {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  height: 45px;
+  margin-bottom: 10px;
+
+  color: #a8734e;
+}
+
+.ritual-showcase .ritual-om-symbol {
+  color: var(--ritual-copper);
+
+  font-family: Georgia, serif;
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* Small divider */
+
+.ritual-showcase .ritual-small-divider {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  width: 48px;
+  margin-bottom: 15px;
+}
+
+.ritual-showcase .ritual-small-divider span {
+  flex: 1;
+  height: 1px;
+  background: #b47c55;
+}
+
+.ritual-showcase .ritual-small-divider i {
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+  background: #b47c55;
+}
+
+/* Titles */
+
+.ritual-showcase .ritual-layout-grid .ritual-showcase-copy h3 {
+  position: relative;
+  z-index: 1;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  margin: 0;
+
+  color: var(--ritual-ink);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 4.2vw, 62px);
+  font-weight: 400;
+
+  line-height: 0.98;
+  letter-spacing: -2.5px;
+}
+
+.ritual-showcase .ritual-showcase-copy h3 span,
+.ritual-showcase .ritual-showcase-copy h3 em {
+  display: block;
+}
+
+.ritual-showcase .ritual-showcase-copy h3 em {
+  color: #9e6747;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.ritual-showcase .ritual-card-pitru h3 em {
+  color: #866b52;
+}
+
+.ritual-showcase .ritual-card-dev h3 em {
+  color: #a74425;
+}
+
+/* Description */
+
+.ritual-showcase .ritual-showcase-copy p {
+  position: relative;
+  z-index: 1;
+
+  max-width: 280px;
+  margin: 20px 0 0;
+
+  color: var(--ritual-muted);
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.ritual-showcase .ritual-showcase-button {
+  position: relative;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+
+  min-height: 46px;
+  max-width: 100%;
+
+  margin-top: 25px;
+  padding: 0 17px;
+
+  border: 1px solid #b27b55;
+  border-radius: 50px;
+
+  color: #45362b;
+  background: transparent;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition:
+    color 250ms ease,
+    background 250ms ease,
+    border-color 250ms ease,
+    transform 250ms ease;
+}
+
+.ritual-showcase .ritual-showcase-button:hover {
+  color: #fffaf4;
+  background: #a94c29;
+  border-color: #a94c29;
+  transform: translateY(-2px);
+}
+
+.ritual-showcase .ritual-card-dev .ritual-showcase-button {
+  color: #fffaf4;
+  background: #ad4c28;
+  border-color: #ad4c28;
+}
+
+.ritual-showcase .ritual-card-dev .ritual-showcase-button:hover {
+  background: #87391f;
+  border-color: #87391f;
+}
+
+/* =====================================================
+   IMAGE PANELS
+===================================================== */
+
+.ritual-showcase .ritual-layout-grid .ritual-showcase-image {
+  position: relative;
+
+  display: block !important;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  border-radius: 48% 0 0 0 / 43% 0 0 0;
+}
+
+.ritual-showcase .ritual-showcase-image img {
+  object-fit: cover;
+  object-position: center;
+
+  transition: transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ritual-showcase .ritual-showcase-card:hover .ritual-showcase-image img {
+  transform: scale(1.045);
+}
+
+.ritual-showcase .ritual-showcase-image-shade {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 232, 207, 0.08),
+    transparent 45%,
+    rgba(72, 39, 20, 0.12)
+  );
+}
+
+/* =====================================================
+   DECORATIVE BOTANICAL DETAIL
+===================================================== */
+
+.ritual-showcase .ritual-copy-leaf {
+  position: absolute;
+
+  bottom: -35px;
+  left: -25px;
+
+  width: 125px;
+  height: 110px;
+
+  opacity: 0.18;
+
+  border: 1px solid #b77f58;
+  border-radius: 100% 0 100% 0;
+
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.ritual-showcase .ritual-copy-leaf::before,
+.ritual-showcase .ritual-copy-leaf::after {
+  content: "";
+  position: absolute;
+
+  border: 1px solid #b77f58;
+  border-radius: 100% 0 100% 0;
+}
+
+.ritual-showcase .ritual-copy-leaf::before {
+  top: -20px;
+  left: 30px;
+
+  width: 65px;
+  height: 90px;
+
+  transform: rotate(30deg);
+}
+
+.ritual-showcase .ritual-copy-leaf::after {
+  top: 8px;
+  left: 65px;
+
+  width: 50px;
+  height: 75px;
+
+  transform: rotate(55deg);
+}
+
+/* =====================================================
+   TABLET — TWO COLUMNS
+===================================================== */
+
+@media (max-width: 1050px) and (min-width: 701px) {
+  .ritual-showcase .ritual-layout-shell {
+    width: calc(100vw - 48px) !important;
+  }
+
+  .ritual-showcase .ritual-layout-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+  }
+
+  .ritual-showcase .ritual-layout-grid > .ritual-showcase-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr) !important;
+
+    height: 390px !important;
+    min-height: 390px !important;
+    max-height: 390px !important;
+  }
+
+  .ritual-showcase .ritual-showcase-copy {
+    padding: 24px 12px 24px 22px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy h3 {
+    font-size: clamp(36px, 4.5vw, 48px);
+    letter-spacing: -1.8px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy p {
+    font-size: 13px;
+  }
+
+  .ritual-showcase .ritual-showcase-button {
+    gap: 8px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+/* =====================================================
+   MOBILE — SINGLE COLUMN
+===================================================== */
+
+@media (max-width: 520px) {
+  .ritual-showcase {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+
+    padding: 38px 0 45px !important;
+  }
+
+  .ritual-showcase::before,
+  .ritual-showcase::after,
+  .ritual-showcase-center,
+  .ritual-showcase-decoration {
+    display: none;
+  }
+
+  .ritual-showcase .ritual-layout-shell {
+    width: calc(100% - 32px) !important;
+  }
+
+  .ritual-showcase .ritual-layout-heading {
+    margin-bottom: 23px;
+    text-align: left;
+  }
+
+  .ritual-showcase .ritual-layout-heading h2 {
+    font-size: clamp(27px, 6vw, 36px);
+  }
+
+  .ritual-showcase .ritual-layout-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 22px;
+  }
+
+  .ritual-showcase .ritual-layout-grid > .ritual-showcase-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr) !important;
+
+    height: 390px;
+    min-height: 390px;
+    max-height: 390px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy {
+    padding: 25px 12px 25px 24px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy h3 {
+    font-size: clamp(40px, 9vw, 55px);
+    letter-spacing: -2px;
+  }
+}
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 520px) {
+  .ritual-showcase .ritual-layout-shell {
+    width: calc(100% - 24px) !important;
+  }
+
+  .ritual-showcase .ritual-layout-grid > .ritual-showcase-card {
+    display: flex !important;
+    flex-direction: column !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    border-radius: 20px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy {
+    min-height: 310px;
+    padding: 28px 25px 26px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy h3 {
+    font-size: 55px;
+  }
+
+  .ritual-showcase .ritual-showcase-copy p {
+    max-width: 290px;
+    margin-top: 16px;
+  }
+
+  .ritual-showcase .ritual-showcase-button {
+    margin-top: 21px;
+  }
+
+  .ritual-showcase .ritual-showcase-image {
+    height: 245px;
+    min-height: 245px;
+
+    border-radius: 38% 0 0 0 / 34% 0 0 0;
+  }
+}
+
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ritual-showcase .ritual-showcase-image img,
+  .ritual-showcase .ritual-showcase-button {
+    transition: none;
+  }
+}

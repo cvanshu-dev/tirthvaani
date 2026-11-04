@@ -1,0 +1,399 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  OTHER
+}
+
+enum RedirectStatus {
+  MOVED_PERMANENTLY
+  FOUND
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  roleId       String
+  role         Role          @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  active       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  sessions     Session[]
+  posts        Post[]
+  revisions    Revision[]
+  activities   ActivityLog[]
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  key         String           @unique
+  name        String
+  description String           @default("")
+  system      Boolean          @default(false)
+  users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  key         String           @unique
+  description String           @default("")
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model LoginThrottle {
+  key       String   @id
+  attempts  Int      @default(0)
+  windowAt  DateTime @default(now())
+  blockedTo DateTime?
+  updatedAt DateTime @updatedAt
+}
+
+model Page {
+  id               String                    @id @default(cuid())
+  title            String
+  slug             String                    @unique
+  status           ContentStatus             @default(DRAFT)
+  showHeader        Boolean                   @default(true)
+  showFooter        Boolean                   @default(true)
+  breadcrumbs       Boolean                   @default(true)
+  publishedAt       DateTime?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  sections          PageSection[]
+  assignments       ContentAssignment[]
+  faqs              PageFaq[]
+  seo               SeoMetadata?
+}
+
+model PageSection {
+  id        String   @id @default(cuid())
+  type      String
+  config    Json
+  visible   Boolean  @default(true)
+  position  Int
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pageId, position])
+}
+
+model Post {
+  id              String               @id @default(cuid())
+  title           String
+  slug            String               @unique
+  excerpt         String               @default("")
+  content         Json
+  status          ContentStatus        @default(DRAFT)
+  featured        Boolean              @default(false)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  readingMinutes  Int                  @default(1)
+  authorId        String
+  author          User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  featuredMediaId String?
+  featuredMedia   MediaAsset?          @relation("PostFeaturedMedia", fields: [featuredMediaId], references: [id], onDelete: SetNull)
+  categories      PostCategory[]
+  tags            PostTag[]
+  assignments     ContentAssignment[]
+  seo             SeoMetadata?
+  revisions       Revision[]           @relation("PostRevisions")
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([authorId, updatedAt])
+}
+
+model Category {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String          @default("")
+  parentId    String?
+  parent      Category?       @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[]      @relation("CategoryTree")
+  posts       PostCategory[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  posts     PostTag[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model PostCategory {
+  postId     String
+  categoryId String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@index([categoryId])
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
+}
+
+model ContentAssignment {
+  id              String   @id @default(cuid())
+  pageId          String
+  postId          String
+  slot            String
+  position        Int      @default(0)
+  visible         Boolean  @default(true)
+  displayOverride Json?
+  page            Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  post            Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([pageId, postId, slot])
+  @@index([pageId, slot, position])
+  @@index([postId])
+}
+
+model Service {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  summary         String        @default("")
+  description     Json
+  status          ContentStatus @default(DRAFT)
+  ritualDetails   Json?
+  samagri         Json?
+  durationMinutes Int?
+  location        String?
+  pricing         Json?
+  bookingCta      String?
+  featuredMediaId String?
+  featuredMedia   MediaAsset?   @relation("ServiceFeaturedMedia", fields: [featuredMediaId], references: [id], onDelete: SetNull)
+  faqs            ServiceFaq[]
+  seo             SeoMetadata?
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model MediaAsset {
+  id             String    @id @default(cuid())
+  key            String    @unique
+  url            String
+  filename       String
+  mimeType       String
+  kind           MediaKind
+  bytes          BigInt
+  width          Int?
+  height         Int?
+  alt            String    @default("")
+  caption        String    @default("")
+  folder         String    @default("/")
+  uploadedById   String?
+  featuredPosts  Post[]    @relation("PostFeaturedMedia")
+  featuredServices Service[] @relation("ServiceFeaturedMedia")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([kind, createdAt])
+  @@index([folder])
+}
+
+model Menu {
+  id        String     @id @default(cuid())
+  name      String
+  location  String     @unique
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model MenuItem {
+  id          String     @id @default(cuid())
+  label       String
+  href        String
+  target      String     @default("_self")
+  enabled     Boolean    @default(true)
+  position    Int        @default(0)
+  menuId      String
+  menu        Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  parentId    String?
+  parent      MenuItem?  @relation("MenuTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children    MenuItem[] @relation("MenuTree")
+
+  @@index([menuId, position])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  location  String?
+  quote     String
+  rating    Int?
+  imageUrl  String?
+  featured  Boolean  @default(false)
+  visible   Boolean  @default(false)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Faq {
+  id        String       @id @default(cuid())
+  question  String
+  answer    String
+  category  String?
+  visible   Boolean      @default(false)
+  position  Int          @default(0)
+  pages     PageFaq[]
+  services  ServiceFaq[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model PageFaq {
+  pageId String
+  faqId  String
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  faq    Faq    @relation(fields: [faqId], references: [id], onDelete: Cascade)
+
+  @@id([pageId, faqId])
+}
+
+model ServiceFaq {
+  serviceId String
+  faqId     String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  faq       Faq     @relation(fields: [faqId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, faqId])
+}
+
+model SeoMetadata {
+  id              String   @id @default(cuid())
+  ownerType       String
+  ownerId         String   @unique
+  title           String?
+  description     String?
+  canonicalUrl    String?
+  robotsIndex     Boolean  @default(true)
+  robotsFollow    Boolean  @default(true)
+  openGraphTitle  String?
+  openGraphText   String?
+  openGraphImage  String?
+  twitterCard     String   @default("summary_large_image")
+  schemaJson      Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pageId          String?  @unique
+  page            Page?    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  postId          String?  @unique
+  post            Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  serviceId       String?  @unique
+  service         Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([ownerType, ownerId])
+}
+
+model Redirect {
+  id        String         @id @default(cuid())
+  source    String         @unique
+  target    String
+  status    RedirectStatus @default(MOVED_PERMANENTLY)
+  enabled   Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Revision {
+  id        String   @id @default(cuid())
+  type      String
+  contentId String
+  snapshot  Json
+  note      String?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  postId    String?
+  post      Post?    @relation("PostRevisions", fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([type, contentId, createdAt])
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String
+  entityType String
+  entityId   String?
+  summary    String
+  changes    Json?
+  ipAddress  String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+model GlobalSettings {
+  id          String   @id @default("global")
+  data        Json
+  updatedAt   DateTime @updatedAt
+}

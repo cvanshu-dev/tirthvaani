@@ -1,0 +1,343 @@
+
+/* =========================================
+   TIRTHVAANI - ROYAL HERITAGE BLOG CARDS
+========================================= */
+
+.ritual-card {
+  --ritual-paper: #f8f3e9;
+  --ritual-gold: #a58a5b;
+  --ritual-gold-light: #d2bd94;
+  --ritual-ink: #30251f;
+  --ritual-muted: #796d5e;
+  --ritual-maroon: #743e36;
+
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.ritual-card-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+  background: var(--ritual-paper);
+  border: 1px solid var(--ritual-gold);
+  outline: 1px solid rgba(165, 138, 91, 0.35);
+  outline-offset: -5px;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.ritual-card:hover .ritual-card-inner {
+  transform: translateY(-7px);
+  border-color: #765b32;
+  box-shadow: 0 18px 40px rgba(53, 40, 25, 0.10);
+}
+
+/* Ornamental corners */
+
+.ritual-frame-corner {
+  position: absolute;
+  z-index: 3;
+  width: 23px;
+  height: 23px;
+  pointer-events: none;
+}
+
+.ritual-frame-corner::before,
+.ritual-frame-corner::after {
+  position: absolute;
+  content: "";
+  background: var(--ritual-gold);
+}
+
+.ritual-frame-corner::before {
+  width: 23px;
+  height: 1px;
+}
+
+.ritual-frame-corner::after {
+  width: 1px;
+  height: 23px;
+}
+
+.corner-tl {
+  top: 5px;
+  left: 5px;
+}
+
+.corner-tr {
+  top: 5px;
+  right: 5px;
+  transform: rotate(90deg);
+}
+
+.corner-bl {
+  bottom: 5px;
+  left: 5px;
+  transform: rotate(-90deg);
+}
+
+.corner-br {
+  right: 5px;
+  bottom: 5px;
+  transform: rotate(180deg);
+}
+
+/* Image */
+
+.ritual-card-image {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  background: #e5dac5;
+}
+
+.ritual-card-photo {
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(.2, .7, .2, 1);
+}
+
+.ritual-card:hover .ritual-card-photo {
+  transform: scale(1.07);
+}
+
+.ritual-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(32, 23, 16, 0.58),
+    transparent 45%
+  );
+  pointer-events: none;
+}
+
+.ritual-card-number {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  color: #fff8e9;
+  background: rgba(43, 33, 25, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.ritual-card-number span {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
+
+.ritual-card-number strong {
+  font-family: Georgia, serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ritual-image-category {
+  position: absolute;
+  bottom: 15px;
+  left: 16px;
+  color: #fff9ed;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.ritual-card-placeholder {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ritual-gold);
+}
+
+.ritual-card-placeholder span {
+  font-size: 42px;
+}
+
+.ritual-card-placeholder p {
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+
+/* Card body */
+
+.ritual-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 26px 19px 17px;
+}
+
+/* Heading */
+
+.ritual-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  text-align: center;
+}
+
+.ritual-card-heading h3 {
+  margin: 0;
+  color: var(--ritual-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.ritual-card:hover .ritual-card-heading h3 {
+  color: var(--ritual-maroon);
+}
+
+.ritual-title-ornament {
+  flex-shrink: 0;
+  color: var(--ritual-gold);
+  font-size: 10px;
+}
+
+/* Excerpt */
+
+.ritual-card-excerpt {
+  display: -webkit-box;
+  min-height: 76px;
+  overflow: hidden;
+  margin: 17px 0 22px;
+  color: var(--ritual-muted);
+  font-size: 13px;
+  line-height: 1.9;
+  text-align: center;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Footer */
+
+.ritual-card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin-top: auto;
+}
+
+.ritual-card-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(165, 138, 91, 0.3);
+  color: #93816a;
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.ritual-meta-dot {
+  color: var(--ritual-gold);
+}
+
+.ritual-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Explore link */
+
+.ritual-card-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid var(--ritual-gold);
+  color: #715432;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  transition: all 0.35s ease;
+}
+
+.ritual-card-arrow {
+  display: flex;
+  width: 29px;
+  height: 29px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(165, 138, 91, 0.5);
+  transition: all 0.35s ease;
+}
+
+.ritual-card:hover .ritual-card-link {
+  color: #fff8ed;
+  background: var(--ritual-maroon);
+  border-color: var(--ritual-maroon);
+}
+
+.ritual-card:hover .ritual-card-arrow {
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: rotate(45deg);
+}
+
+.ritual-card:focus-visible {
+  outline: 2px solid var(--ritual-maroon);
+  outline-offset: 5px;
+}
+
+/* Responsive */
+
+@media (max-width: 1050px) {
+  .ritual-card-image {
+    height: 220px;
+  }
+
+  .ritual-card-heading h3 {
+    font-size: 22px;
+  }
+
+  .ritual-card-body {
+    padding: 23px 15px 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ritual-card-image {
+    height: 245px;
+  }
+
+  .ritual-card-heading h3 {
+    font-size: 24px;
+  }
+
+  .ritual-card-body {
+    padding: 24px 18px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ritual-card-inner,
+  .ritual-card-photo,
+  .ritual-card-arrow,
+  .ritual-card-link {
+    transition: none;
+  }
+
+  .ritual-card:hover .ritual-card-inner {
+    transform: none;
+  }
+}
