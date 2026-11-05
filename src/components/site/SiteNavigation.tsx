@@ -11,15 +11,7 @@ const navigationItems: NavigationLink[] = [
       { label: "Dev Karyas", href: "/dev-rituals" },
     ],
   },
-  {
-    label: "Destinations",
-    href: "/destinations",
-    children: [
-      { label: "Varanasi", href: "/destinations/varanasi" },
-      { label: "Gaya", href: "/destinations/gaya" },
-      { label: "Prayagraj", href: "/destinations/prayagraj" },
-    ],
-  },
+
   { label: "Journal", href: "/journal" },
   { label: "Contact", href: "/contact" },
 ];

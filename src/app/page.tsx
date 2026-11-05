@@ -8,7 +8,7 @@ import {
   HeroSection,
   About,
   Kashi,
-  DestinationsSection,
+ 
   JournalPreviewSection,
 } from "@/components/sections/home-sections";
 
@@ -21,7 +21,7 @@ export default function HomePage() {
       <Kashi />
       <About />
       <Pitru />
-      <DestinationsSection />
+   
 
       <JournalPreviewSection />
       <AssignedPosts pageSlug="" slot="before-footer" />
