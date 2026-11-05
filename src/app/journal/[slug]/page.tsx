@@ -7,7 +7,6 @@ import { notFound } from "next/navigation";
 import { CmsStandalonePage } from "@/components/content/CmsStandalonePage";
 import {
   extractMarkdownHeadings,
-  MarkdownContent,
 } from "@/components/content/MarkdownContent";
 import { Contact } from "@/components/pages/ContactPage";
 import { Article } from "@/components/pages/JournalPages";
@@ -65,7 +64,7 @@ function parseFixedContent(value: unknown): FixedPostContent | null {
   };
 }
 
-function getLegacyText(value: unknown) {
+function getLegacyText(value: unknown): string {
   if (!isRecord(value) || typeof value.text !== "string") {
     return "";
   }
@@ -85,8 +84,8 @@ export async function generateMetadata({
   await connection();
 
   const { slug } = await params;
-  const now = new Date();
   const db = getPrisma();
+  const now = new Date();
 
   const managed = db
     ? await db.post.findFirst({
@@ -100,9 +99,11 @@ export async function generateMetadata({
     : null;
 
   if (managed) {
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com";
+
     const canonical =
-      managed.seo?.canonicalUrl ||
-      `${process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"}/journal/${managed.slug}`;
+      managed.seo?.canonicalUrl || `${siteUrl}/journal/${managed.slug}`;
 
     return {
       title: managed.seo?.title || managed.title,
@@ -114,7 +115,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title:
-          managed.seo?.openGraphTitle || managed.seo?.title || managed.title,
+          managed.seo?.openGraphTitle ||
+          managed.seo?.title ||
+          managed.title,
         description:
           managed.seo?.openGraphText ||
           managed.seo?.description ||
@@ -123,17 +126,6 @@ export async function generateMetadata({
           ? [managed.seo.openGraphImage]
           : undefined,
         type: "article",
-      },
-      twitter: {
-        card:
-          managed.seo?.twitterCard === "summary"
-            ? "summary"
-            : "summary_large_image",
-        title: managed.seo?.openGraphTitle || managed.title,
-        description: managed.seo?.openGraphText || managed.excerpt,
-        images: managed.seo?.openGraphImage
-          ? [managed.seo.openGraphImage]
-          : undefined,
       },
     };
   }
@@ -155,11 +147,9 @@ export async function generateMetadata({
       alternates: {
         canonical:
           page.seo?.canonicalUrl ||
-          `${process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"}/journal/${slug}`,
-      },
-      robots: {
-        index: page.seo?.robotsIndex ?? true,
-        follow: page.seo?.robotsFollow ?? true,
+          `${
+            process.env.NEXT_PUBLIC_SITE_URL || "https://tirthvaani.com"
+          }/journal/${slug}`,
       },
     };
   }
@@ -167,7 +157,7 @@ export async function generateMetadata({
   const article = articles.find((item) => item.slug === slug);
 
   return {
-    title: article?.title ?? "Journal article",
+    title: article?.title || "Journal article",
     description:
       "Useful context and thoughtful reading for your sacred journey.",
   };
@@ -181,8 +171,8 @@ export default async function Page({
   await connection();
 
   const { slug } = await params;
-  const now = new Date();
   const db = getPrisma();
+  const now = new Date();
 
   const post = db
     ? await db.post.findFirst({
@@ -193,7 +183,11 @@ export default async function Page({
         },
         include: {
           featuredMedia: true,
-          author: { select: { name: true } },
+          author: {
+            select: {
+              name: true,
+            },
+          },
         },
       })
     : null;
@@ -201,13 +195,39 @@ export default async function Page({
   if (post) {
     const fixedContent = parseFixedContent(post.content);
     const legacyContent = getLegacyText(post.content);
-    const articleBody = fixedContent?.body || legacyContent;
+
+    const articleBody =
+      fixedContent?.introText ||
+      fixedContent?.body ||
+      legacyContent ||
+      post.excerpt;
+
+    const articleImageUrl =
+      fixedContent?.introImage.url ||
+      post.featuredMedia?.url ||
+      "/hero.jpg";
+
+    const articleImageAlt =
+      fixedContent?.introImage.alt ||
+      post.featuredMedia?.alt ||
+      post.title;
+
+    const heroImageUrl =
+      post.featuredMedia?.url ||
+      fixedContent?.introImage.url ||
+      "/hero.jpg";
+
+    const heroImageAlt =
+      post.featuredMedia?.alt ||
+      fixedContent?.introImage.alt ||
+      post.title;
 
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
       headline: post.title,
       description: post.excerpt,
+      image: heroImageUrl,
       datePublished: post.publishedAt?.toISOString(),
       dateModified: post.updatedAt.toISOString(),
       author: {
@@ -225,7 +245,7 @@ export default async function Page({
 
     return (
       <>
-        <main className="simple-post-page">
+        <main className="heritage-post-page">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
@@ -233,55 +253,60 @@ export default async function Page({
             }}
           />
 
-          <div className="simple-post-breadcrumbs">
-            <Link href="/">Home</Link>
-            <span>/</span>
-            <Link href="/journal">Journal</Link>
-            <span>/</span>
-            <span>{post.title}</span>
-          </div>
+          <section
+            className="pitru-hero-v2 blog-post-hero"
+            aria-labelledby="blog-post-title"
+          >
+            <Image
+              src={heroImageUrl}
+              alt={heroImageAlt}
+              fill
+              priority
+              sizes="100vw"
+              unoptimized
+              className="pitru-hero-v2-image"
+            />
 
-          <article className="simple-post">
-            <header className="simple-post-header">
-              <h1>{post.title}</h1>
+            <div className="pitru-hero-v2-overlay" />
 
-              <div className="simple-post-divider">
+            <div className="dev-hero-simple-content">
+              <p className="blog-post-hero-kicker">
+                JOURNAL · TIRTHVAANI
+              </p>
+
+              <h1 id="blog-post-title">{post.title}</h1>
+
+              <div className="blog-post-hero-divider">
                 <span />
-                <span>✦</span>
+                <b>✦</b>
                 <span />
-              </div>
-            </header>
-
-            <div className="simple-post-content">
-              {fixedContent?.introImage.url && (
-                <figure className="simple-post-image">
-                  <Image
-                    src={fixedContent.introImage.url}
-                    alt={fixedContent.introImage.alt || post.title}
-                    width={700}
-                    height={700}
-                    unoptimized
-                    priority
-                  />
-
-                  {fixedContent.introImage.caption && (
-                    <figcaption>{fixedContent.introImage.caption}</figcaption>
-                  )}
-                </figure>
-              )}
-
-              <div className="simple-post-body">
-                {fixedContent?.introHeading && (
-                  <h2>{fixedContent.introHeading}</h2>
-                )}
-
-                {fixedContent?.introText && (
-                  <MarkdownContent source={fixedContent.introText} />
-                )}
-
-                {articleBody && <MarkdownContent source={articleBody} />}
               </div>
             </div>
+          </section>
+
+
+          <article className="heritage-post">
+            <section className="heritage-post-feature">
+              <div className="heritage-post-flow">
+                <div className="heritage-post-feature-image">
+                  <Image
+                    src={articleImageUrl}
+                    alt={articleImageAlt}
+                    width={900}
+                    height={1000}
+                    unoptimized
+                  />
+
+                  {fixedContent?.introImage.caption && (
+                    <small>{fixedContent.introImage.caption}</small>
+                  )}
+                </div>
+
+                <div className="heritage-post-feature-copy">
+                  <p>{articleBody}</p>
+                </div>
+              </div>
+            </section>
 
             {headings.length > 0 && (
               <div className="sr-only">

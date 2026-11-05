@@ -89,10 +89,18 @@ model LoginThrottle {
   updatedAt DateTime @updatedAt
 }
 
+enum PageTemplate {
+  STANDARD
+  ABOUT
+  DEV_RITUALS
+}
+
 model Page {
   id               String                    @id @default(cuid())
   title            String
   slug             String                    @unique
+  templateData Json?
+  template         PageTemplate              @default(STANDARD)
   status           ContentStatus             @default(DRAFT)
   showHeader        Boolean                   @default(true)
   showFooter        Boolean                   @default(true)
@@ -104,6 +112,7 @@ model Page {
   assignments       ContentAssignment[]
   faqs              PageFaq[]
   seo               SeoMetadata?
+  
 }
 
 model PageSection {
@@ -397,3 +406,5 @@ model GlobalSettings {
   data        Json
   updatedAt   DateTime @updatedAt
 }
+
+

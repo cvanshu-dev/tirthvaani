@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { savePostAction } from "@/app/admin/(panel)/posts/actions";
 import { PageAssignmentPicker } from "@/components/admin/PageAssignmentPicker";
 
@@ -8,6 +8,7 @@ type EditorPost = {
   id: string;
   title: string;
   slug: string;
+  template: PageTemplate;
   excerpt: string;
   body: string;
   status: "DRAFT" | "PUBLISHED" | "SCHEDULED" | "ARCHIVED";
@@ -51,74 +52,90 @@ function emptyContent(): FixedPostContent {
 }
 
 function parseContent(value?: string): FixedPostContent {
-  if (!value?.trim()) return emptyContent();
+  if (!value?.trim()) {
+    return emptyContent();
+  }
 
   try {
-    const parsed = JSON.parse(value);
+    const parsed: unknown = JSON.parse(value);
 
-    if (parsed?.format === "fixed-post-v1") {
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed) &&
+      "format" in parsed &&
+      parsed.format === "fixed-post-v1"
+    ) {
+      const content = parsed as Record<string, unknown>;
+      const image =
+        content.introImage &&
+        typeof content.introImage === "object" &&
+        !Array.isArray(content.introImage)
+          ? (content.introImage as Record<string, unknown>)
+          : {};
+
       return {
         format: "fixed-post-v1",
         introHeading:
-          typeof parsed.introHeading === "string" ? parsed.introHeading : "",
-        introText: typeof parsed.introText === "string" ? parsed.introText : "",
+          typeof content.introHeading === "string"
+            ? content.introHeading
+            : "",
+        introText:
+          typeof content.introText === "string" ? content.introText : "",
         introImage: {
-          url:
-            typeof parsed.introImage?.url === "string"
-              ? parsed.introImage.url
-              : "",
-          alt:
-            typeof parsed.introImage?.alt === "string"
-              ? parsed.introImage.alt
-              : "",
-          caption:
-            typeof parsed.introImage?.caption === "string"
-              ? parsed.introImage.caption
-              : "",
+          url: typeof image.url === "string" ? image.url : "",
+          alt: typeof image.alt === "string" ? image.alt : "",
+          caption: typeof image.caption === "string" ? image.caption : "",
         },
-        body: typeof parsed.body === "string" ? parsed.body : "",
+        body: typeof content.body === "string" ? content.body : "",
       };
     }
 
-    if (parsed?.format === "blocks-v1" && Array.isArray(parsed.blocks)) {
-      const firstImage = parsed.blocks.find(
-        (block: { type?: string }) => block.type === "image",
-      );
-      const paragraphs = parsed.blocks
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed) &&
+      "format" in parsed &&
+      parsed.format === "blocks-v1" &&
+      "blocks" in parsed &&
+      Array.isArray(parsed.blocks)
+    ) {
+      const blocks = parsed.blocks as Array<Record<string, unknown>>;
+      const image = blocks.find((block) => block.type === "image");
+      const paragraphText = blocks
         .filter(
-          (block: { type?: string; text?: string }) =>
+          (block) =>
             block.type === "paragraph" && typeof block.text === "string",
         )
-        .map((block: { text?: string }) => block.text ?? "");
+        .map((block) => String(block.text))
+        .join("\n\n");
 
       return {
         format: "fixed-post-v1",
-        introHeading:
-          parsed.blocks.find(
-            (block: { type?: string; text?: string }) =>
-              block.type === "heading" && typeof block.text === "string",
-          )?.text ?? "",
-        introText: paragraphs.slice(0, 2).join("\n\n"),
+        introHeading: "",
+        introText: paragraphText,
         introImage: {
-          url: firstImage?.url ?? "",
-          alt: firstImage?.alt ?? "",
-          caption: firstImage?.caption ?? "",
+          url: typeof image?.url === "string" ? image.url : "",
+          alt: typeof image?.alt === "string" ? image.alt : "",
+          caption: typeof image?.caption === "string" ? image.caption : "",
         },
-        body: paragraphs.slice(2).join("\n\n"),
+        body: "",
       };
     }
   } catch {
     return {
       ...emptyContent(),
-      body: value,
+      introText: value,
     };
   }
 
   return {
     ...emptyContent(),
-    body: value,
+    introText: value,
   };
 }
+
+type PageTemplate = "STANDARD" | "ABOUT" | "DEV_RITUALS";
 
 export function PostEditor({
   post,
@@ -133,39 +150,40 @@ export function PostEditor({
   tags: { id: string; name: string }[];
   error?: string;
 }) {
-  const initialContent = useMemo(
-    () => parseContent(post?.body),
-    [post?.body],
-  );
+  const initialContent = parseContent(post?.body);
 
-  const [introHeading, setIntroHeading] = useState(
-    initialContent.introHeading,
+  const [paragraph, setParagraph] = useState(
+    [initialContent.introText, initialContent.body]
+      .filter(Boolean)
+      .join("\n\n"),
   );
-  const [introText, setIntroText] = useState(initialContent.introText);
   const [imageUrl, setImageUrl] = useState(initialContent.introImage.url);
   const [imageAlt, setImageAlt] = useState(initialContent.introImage.alt);
   const [imageCaption, setImageCaption] = useState(
     initialContent.introImage.caption,
   );
-  const [body, setBody] = useState(initialContent.body);
 
-  const serializedContent = JSON.stringify({
+  const serializedContent: FixedPostContent = {
     format: "fixed-post-v1",
-    introHeading,
-    introText,
+    introHeading: "",
+    introText: paragraph,
     introImage: {
       url: imageUrl,
       alt: imageAlt,
       caption: imageCaption,
     },
-    body,
-  } satisfies FixedPostContent);
+    body: "",
+  };
 
   return (
     <form action={savePostAction} className="admin-editor-layout">
       {post && <input type="hidden" name="id" value={post.id} />}
 
-      <input type="hidden" name="body" value={serializedContent} />
+      <input
+        type="hidden"
+        name="body"
+        value={JSON.stringify(serializedContent)}
+      />
 
       {error && (
         <p className="admin-form-error" role="alert">
@@ -193,6 +211,7 @@ export function PostEditor({
               defaultValue={post?.title}
               placeholder="Pitrukaryas in Varanasi"
             />
+       
           </label>
 
           <div className="admin-field-row">
@@ -238,48 +257,23 @@ export function PostEditor({
         <section className="admin-panel admin-editor-card fixed-post-editor">
           <div className="admin-panel-heading">
             <div>
-              <p className="admin-kicker">FIXED ARTICLE TEMPLATE</p>
-              <h2>Design your article</h2>
+              <p className="admin-kicker">POST TEMPLATE</p>
+              <h2>Image and paragraph</h2>
             </div>
+
             <span className="admin-muted">
-              Every post uses the same public layout
+              Every post uses the same design
             </span>
           </div>
 
-          <label className="admin-field">
-            <span>Intro heading</span>
-            <input
-              className="admin-input"
-              value={introHeading}
-              onChange={(event) => setIntroHeading(event.target.value)}
-              placeholder="Pitru Karya in Kashi: a guide to remembrance"
-            />
-          </label>
-
-          <label className="admin-field">
-            <span>Intro paragraphs</span>
-            <textarea
-              className="admin-input fixed-post-intro-editor"
-              value={introText}
-              onChange={(event) => setIntroText(event.target.value)}
-              placeholder="Write the introduction. Leave one blank line between paragraphs."
-              rows={8}
-            />
-          </label>
-
           <div className="fixed-post-image-fields">
-            <div>
-              <p className="admin-kicker">INTRO IMAGE</p>
-              <h3>Image displayed beside the introduction</h3>
-            </div>
-
             <label className="admin-field">
               <span>Image URL</span>
               <input
                 className="admin-input"
                 value={imageUrl}
                 onChange={(event) => setImageUrl(event.target.value)}
-                placeholder="https://example.com/image.jpg"
+                placeholder="/pitru-rituals.png"
               />
             </label>
 
@@ -287,7 +281,7 @@ export function PostEditor({
               <img
                 className="fixed-post-image-preview"
                 src={imageUrl}
-                alt={imageAlt || "Article introduction"}
+                alt={imageAlt || "Post image"}
               />
             )}
 
@@ -307,32 +301,26 @@ export function PostEditor({
                 className="admin-input"
                 value={imageCaption}
                 onChange={(event) => setImageCaption(event.target.value)}
-                placeholder="Optional image caption"
+                placeholder="Optional caption"
               />
             </label>
           </div>
 
           <label className="admin-field">
-            <span>Article content</span>
+            <span>Post paragraph</span>
             <textarea
               className="admin-input fixed-post-body-editor"
-              value={body}
-              onChange={(event) => setBody(event.target.value)}
-              placeholder={`## Why do families perform Pitru Karya in Varanasi?
-
-Write your article paragraphs here.
-
-## Common ancestral observances
-
-Use Markdown headings with ## and separate paragraphs with a blank line.`}
-              rows={24}
+              value={paragraph}
+              onChange={(event) => setParagraph(event.target.value)}
+              placeholder="Write the complete post paragraph here..."
+              rows={18}
+              required
             />
           </label>
 
           <p className="admin-help-text">
-            The public page automatically applies the fixed design: centered
-            title, divider, image beside the introduction, and full-width
-            article content below.
+            The image automatically appears beside the paragraph and the text
+            continues below the image.
           </p>
         </section>
 

@@ -10,11 +10,11 @@ import {
   Utensils,
 } from "lucide-react";
 
-const highlights = [
+{/*const highlights = [
   {
     title: "Lord Shiva & Kashi",
     text: "Kashi is known to be the favorite place of Lord Shiva. It is believed that those who visit Kashi and take a holy dip in the River Ganges attain liberation.",
-    image: "/images/lord-shiva-kashi.jpg",
+    image: "/about.jpg",
   },
   {
     title: "About Kashi",
@@ -31,7 +31,7 @@ const highlights = [
     text: "Our rituals and services are performed according to the Vedic scriptures, preserving the spiritual heritage of Kashi for every devotee.",
     image: "/images/vedic-rituals.jpg",
   },
-];
+];*/}
 
 const facilities = [
   {
@@ -97,7 +97,7 @@ export function About() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
           <div className="relative h-[430px] overflow-hidden rounded-[30px_140px_30px_30px] shadow-2xl md:h-[600px]">
             <Image
-              src="/images/about-varanasi.jpg"
+              src="/about.jpg"
               alt="Sacred ghats of Varanasi beside the River Ganga"
               fill
               priority
@@ -157,7 +157,9 @@ export function About() {
         </div>
       </section>
 
-      {/* Sacred Places */}
+    
+    {/* Sacred Places */}
+     {/* 
       <section className="bg-[#f3e8da] px-5 py-20 md:px-12 lg:px-24 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
@@ -204,8 +206,8 @@ export function About() {
             ))}
           </div>
         </div>
-      </section>
-
+      </section>*/}
+        
       {/* Facilities */}
       <section className="px-5 py-20 md:px-12 lg:px-24 lg:py-32">
         <div className="mx-auto max-w-7xl">

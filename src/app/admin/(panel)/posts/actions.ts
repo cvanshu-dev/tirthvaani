@@ -4,9 +4,9 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { Prisma } from "@/generated/prisma/client";
 import { requirePermission } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
-import { Prisma } from "@/generated/prisma/client";
 
 const schema = z.object({
   id: z.string().optional(),
@@ -50,14 +50,68 @@ const schema = z.object({
   seoDescription: z.string().trim().max(320),
 });
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function validationRedirect(id?: string): never {
+  redirect(
+    id
+      ? `/admin/posts/${id}?error=validation`
+      : "/admin/posts/new?error=validation",
+  );
+}
+
+function parseFixedPostContent(
+  value: string,
+  id?: string,
+): Prisma.InputJsonValue {
+  try {
+    const parsed: unknown = JSON.parse(value);
+
+    if (!isRecord(parsed) || parsed.format !== "fixed-post-v1") {
+      validationRedirect(id);
+    }
+
+    const image = parsed.introImage;
+
+    if (
+      typeof parsed.introHeading !== "string" ||
+      typeof parsed.introText !== "string" ||
+      !isRecord(image) ||
+      typeof image.url !== "string" ||
+      typeof image.alt !== "string" ||
+      typeof image.caption !== "string" ||
+      typeof parsed.body !== "string"
+    ) {
+      validationRedirect(id);
+    }
+
+    return {
+      format: "fixed-post-v1",
+      introHeading: parsed.introHeading,
+      introText: parsed.introText,
+      introImage: {
+        url: image.url,
+        alt: image.alt,
+        caption: image.caption,
+      },
+      body: parsed.body,
+    };
+  } catch {
+    validationRedirect(id);
+  }
+}
+
 export async function savePostAction(formData: FormData) {
   const user = await requirePermission("posts:write");
+
   const parsed = schema.safeParse({
     id: formData.get("id") || undefined,
     title: formData.get("title"),
     slug: formData.get("slug"),
     excerpt: formData.get("excerpt") ?? "",
-    body: formData.get("body"),
+   body: String(formData.get("body") ?? ""),
     status: formData.get("status"),
     scheduledAt: formData.get("scheduledAt") || undefined,
     featured: formData.get("featured") === "on",
@@ -78,114 +132,69 @@ export async function savePostAction(formData: FormData) {
     seoDescription: formData.get("seoDescription") || "",
   });
 
-  if (!parsed.success) {
-    redirect(`/admin/posts/new?error=validation`);
-  }
+if (!parsed.success) {
+  console.error("Post validation failed:", parsed.error.flatten());
+
+  const target = formData.get("id")
+    ? `/admin/posts/${String(formData.get("id"))}?error=validation`
+    : "/admin/posts/new?error=validation";
+
+  redirect(target);
+}
 
   const db = getPrisma();
-  if (!db) redirect("/admin?error=database");
+
+  if (!db) {
+    redirect("/admin?error=database");
+  }
+
   const values = parsed.data;
   const status = values.status;
-  const scheduledAt = values.scheduledAt ? new Date(values.scheduledAt) : null;
+  const scheduledAt = values.scheduledAt
+    ? new Date(values.scheduledAt)
+    : null;
+
   if (status === "SCHEDULED" && (!scheduledAt || scheduledAt <= new Date())) {
-    redirect("/admin/posts/new?error=schedule");
+    redirect(
+      values.id
+        ? `/admin/posts/${values.id}?error=schedule`
+        : "/admin/posts/new?error=schedule",
+    );
   }
 
   const previous = values.id
     ? await db.post.findUnique({
         where: { id: values.id },
-        include: { categories: true, tags: true },
+        include: {
+          categories: true,
+          tags: true,
+        },
       })
     : null;
-  if (values.id && !previous) redirect("/admin/posts?error=missing");
-  if (previous && user.role.key === "AUTHOR" && previous.authorId !== user.id) {
-    redirect("/admin?error=forbidden");
+
+  if (values.id && !previous) {
+    redirect("/admin/posts?error=missing");
   }
+
+  if (previous && user.role.key === "AUTHOR") {
+    if (previous.authorId !== user.id) {
+      redirect("/admin?error=forbidden");
+    }
+  }
+
   if (
     (status === "PUBLISHED" || status === "SCHEDULED") &&
     user.role.key === "AUTHOR"
   ) {
     redirect("/admin?error=forbidden");
   }
+
   const publishedAt =
-    status === "PUBLISHED" ? (previous?.publishedAt ?? new Date()) : null;
-let body: Prisma.InputJsonValue;
+    status === "PUBLISHED"
+      ? (previous?.publishedAt ?? new Date())
+      : null;
 
-try {
-  const parsedBody: unknown = JSON.parse(values.body);
-
-  if (
-    !parsedBody ||
-    typeof parsedBody !== "object" ||
-    Array.isArray(parsedBody) ||
-    !("format" in parsedBody) ||
-    parsedBody.format !== "fixed-post-v1" ||
-    !("introHeading" in parsedBody) ||
-    typeof parsedBody.introHeading !== "string" ||
-    !("introText" in parsedBody) ||
-    typeof parsedBody.introText !== "string" ||
-    !("introImage" in parsedBody) ||
-    !parsedBody.introImage ||
-    typeof parsedBody.introImage !== "object" ||
-    Array.isArray(parsedBody.introImage) ||
-    !("url" in parsedBody.introImage) ||
-    typeof parsedBody.introImage.url !== "string" ||
-    !("alt" in parsedBody.introImage) ||
-    typeof parsedBody.introImage.alt !== "string" ||
-    !("caption" in parsedBody.introImage) ||
-    typeof parsedBody.introImage.caption !== "string" ||
-    !("body" in parsedBody) ||
-    typeof parsedBody.body !== "string"
-  ) {
-    throw new Error("Invalid fixed post content");
-  }
-
-  body = {
-    format: "fixed-post-v1",
-    introHeading: parsedBody.introHeading,
-    introText: parsedBody.introText,
-    introImage: {
-      url: parsedBody.introImage.url,
-      alt: parsedBody.introImage.alt,
-      caption: parsedBody.introImage.caption,
-    },
-    body: parsedBody.body,
-  };
-} catch {
-  redirect(
-    values.id
-      ? `/admin/posts/${values.id}?error=validation`
-      : "/admin/posts/new?error=validation",
-  );
-}
-
-try {
-  const parsedBody: unknown = JSON.parse(values.body);
-
-  if (
-    !parsedBody ||
-    typeof parsedBody !== "object" ||
-    Array.isArray(parsedBody) ||
-    !("format" in parsedBody) ||
-    parsedBody.format !== "blocks-v1" ||
-    !("blocks" in parsedBody) ||
-    !Array.isArray(parsedBody.blocks) ||
-    parsedBody.blocks.length === 0
-  ) {
-    throw new Error("Invalid block content");
-  }
-
-  body = {
-    format: "blocks-v1",
-    blocks: parsedBody.blocks,
-  };
-} catch {
-  redirect(
-    values.id
-      ? `/admin/posts/${values.id}?error=validation`
-      : "/admin/posts/new?error=validation",
-  );
-}
+  const body = parseFixedPostContent(values.body, values.id);
 
   const post = await db.$transaction(async (tx) => {
     const saved = previous
@@ -216,23 +225,36 @@ try {
           },
         });
 
-    await tx.contentAssignment.deleteMany({ where: { postId: saved.id } });
-    await tx.postCategory.deleteMany({ where: { postId: saved.id } });
-    await tx.postTag.deleteMany({ where: { postId: saved.id } });
-    if (values.categories.length)
+    await tx.contentAssignment.deleteMany({
+      where: { postId: saved.id },
+    });
+
+    await tx.postCategory.deleteMany({
+      where: { postId: saved.id },
+    });
+
+    await tx.postTag.deleteMany({
+      where: { postId: saved.id },
+    });
+
+    if (values.categories.length) {
       await tx.postCategory.createMany({
         data: [...new Set(values.categories)].map((categoryId) => ({
           postId: saved.id,
           categoryId,
         })),
       });
-    if (values.tags.length)
+    }
+
+    if (values.tags.length) {
       await tx.postTag.createMany({
         data: [...new Set(values.tags)].map((tagId) => ({
           postId: saved.id,
           tagId,
         })),
       });
+    }
+
     if (values.assignments.length) {
       await tx.contentAssignment.createMany({
         data: values.assignments.map(
@@ -292,21 +314,32 @@ try {
         entityType: "post",
         entityId: saved.id,
         summary: `${previous ? "Updated" : "Created"} post: ${saved.title}`,
-        changes: { status: { from: previous?.status ?? null, to: status } },
+        changes: {
+          status: {
+            from: previous?.status ?? null,
+            to: status,
+          },
+        },
       },
     });
+
     return saved;
   });
 
   revalidatePath("/journal");
   revalidatePath(`/journal/${post.slug}`);
+
   for (const { pageId } of values.assignments) {
     const page = await db.page.findUnique({
       where: { id: pageId },
       select: { slug: true },
     });
-    if (page) revalidatePath(page.slug ? `/${page.slug}` : "/");
+
+    if (page) {
+      revalidatePath(page.slug ? `/${page.slug}` : "/");
+    }
   }
+
   redirect("/admin/posts?saved=1");
 }
 
@@ -314,15 +347,32 @@ export async function deletePostAction(formData: FormData) {
   const user = await requirePermission("posts:write");
   const id = String(formData.get("id") ?? "");
   const db = getPrisma();
-  if (!db || !id) redirect("/admin/posts");
+
+  if (!db || !id) {
+    redirect("/admin/posts");
+  }
+
   const post = await db.post.findUnique({
     where: { id },
-    select: { id: true, title: true, authorId: true },
+    select: {
+      id: true,
+      title: true,
+      authorId: true,
+    },
   });
-  if (!post) redirect("/admin/posts");
-  if (user.role.key === "AUTHOR" && post.authorId !== user.id)
+
+  if (!post) {
+    redirect("/admin/posts");
+  }
+
+  if (user.role.key === "AUTHOR" && post.authorId !== user.id) {
     redirect("/admin?error=forbidden");
-  await db.post.delete({ where: { id } });
+  }
+
+  await db.post.delete({
+    where: { id },
+  });
+
   await db.activityLog.create({
     data: {
       userId: user.id,
@@ -332,6 +382,7 @@ export async function deletePostAction(formData: FormData) {
       summary: `Deleted post: ${post.title}`,
     },
   });
+
   revalidatePath("/journal");
   redirect("/admin/posts?deleted=1");
 }
@@ -340,22 +391,35 @@ export async function restorePostRevisionAction(formData: FormData) {
   const user = await requirePermission("posts:write");
   const revisionId = String(formData.get("revisionId") ?? "");
   const db = getPrisma();
-  if (!db || !revisionId) redirect("/admin/posts");
+
+  if (!db || !revisionId) {
+    redirect("/admin/posts");
+  }
+
   const revision = await db.revision.findUnique({
     where: { id: revisionId },
     include: { post: true },
   });
-  if (!revision?.post || revision.type !== "post") redirect("/admin/posts");
+
+  if (!revision?.post || revision.type !== "post") {
+    redirect("/admin/posts");
+  }
+
   const current = revision.post;
+
   if (user.role.key === "AUTHOR" && current.authorId !== user.id) {
     redirect("/admin?error=forbidden");
   }
+
   const snapshot = revision.snapshot;
+
   if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) {
     redirect(`/admin/posts/${current.id}?error=revision`);
   }
+
   const values = snapshot as Record<string, unknown>;
   const statuses = ["DRAFT", "PUBLISHED", "SCHEDULED", "ARCHIVED"];
+
   if (
     typeof values.title !== "string" ||
     typeof values.slug !== "string" ||
@@ -364,6 +428,7 @@ export async function restorePostRevisionAction(formData: FormData) {
   ) {
     redirect(`/admin/posts/${current.id}?error=revision`);
   }
+
   if (values.status !== "DRAFT" && user.role.key === "AUTHOR") {
     await requirePermission("posts:publish");
   }
@@ -388,6 +453,7 @@ export async function restorePostRevisionAction(formData: FormData) {
         note: "Backup before revision restore",
       },
     });
+
     await tx.post.update({
       where: { id: current.id },
       data: {
@@ -395,11 +461,16 @@ export async function restorePostRevisionAction(formData: FormData) {
         slug: values.slug as string,
         excerpt: values.excerpt as string,
         content:
-          values.content && typeof values.content === "object"
-            ? values.content
+          values.content &&
+          typeof values.content === "object" &&
+          !Array.isArray(values.content)
+            ? (values.content as Prisma.InputJsonValue)
             : {},
         status: values.status as
-          "DRAFT" | "PUBLISHED" | "SCHEDULED" | "ARCHIVED",
+          | "DRAFT"
+          | "PUBLISHED"
+          | "SCHEDULED"
+          | "ARCHIVED",
         featured: values.featured === true,
         scheduledAt:
           typeof values.scheduledAt === "string"
@@ -411,6 +482,7 @@ export async function restorePostRevisionAction(formData: FormData) {
             : null,
       },
     });
+
     await tx.activityLog.create({
       data: {
         userId: user.id,
@@ -421,9 +493,11 @@ export async function restorePostRevisionAction(formData: FormData) {
       },
     });
   });
+
   revalidatePath("/journal");
   revalidatePath(`/journal/${current.slug}`);
   revalidatePath(`/journal/${values.slug}`);
+
   redirect(`/admin/posts/${current.id}?restored=1`);
 }
 
@@ -431,22 +505,39 @@ export async function duplicatePostAction(formData: FormData) {
   const user = await requirePermission("posts:write");
   const id = String(formData.get("id") ?? "");
   const db = getPrisma();
-  if (!db || !id) redirect("/admin/posts");
+
+  if (!db || !id) {
+    redirect("/admin/posts");
+  }
+
   const source = await db.post.findUnique({
     where: { id },
-    include: { categories: true, tags: true },
+    include: {
+      categories: true,
+      tags: true,
+    },
   });
-  if (!source) redirect("/admin/posts");
+
+  if (!source) {
+    redirect("/admin/posts");
+  }
+
   if (user.role.key === "AUTHOR" && source.authorId !== user.id) {
     redirect("/admin?error=forbidden");
   }
+
   const copy = await db.$transaction(async (tx) => {
     const created = await tx.post.create({
       data: {
         title: `${source.title} (copy)`.slice(0, 180),
         slug: `${source.slug}-copy-${randomUUID().slice(0, 8)}`,
         excerpt: source.excerpt,
-        content: source.content ?? {},
+        content:
+          source.content &&
+          typeof source.content === "object" &&
+          !Array.isArray(source.content)
+            ? (source.content as Prisma.InputJsonValue)
+            : {},
         featured: false,
         status: "DRAFT",
         authorId: user.id,
@@ -454,6 +545,7 @@ export async function duplicatePostAction(formData: FormData) {
         readingMinutes: source.readingMinutes,
       },
     });
+
     if (source.categories.length) {
       await tx.postCategory.createMany({
         data: source.categories.map((entry) => ({
@@ -462,6 +554,7 @@ export async function duplicatePostAction(formData: FormData) {
         })),
       });
     }
+
     if (source.tags.length) {
       await tx.postTag.createMany({
         data: source.tags.map((entry) => ({
@@ -470,6 +563,7 @@ export async function duplicatePostAction(formData: FormData) {
         })),
       });
     }
+
     await tx.activityLog.create({
       data: {
         userId: user.id,
@@ -479,7 +573,9 @@ export async function duplicatePostAction(formData: FormData) {
         summary: `Duplicated post: ${source.title}`,
       },
     });
+
     return created;
   });
+
   redirect(`/admin/posts/${copy.id}`);
 }

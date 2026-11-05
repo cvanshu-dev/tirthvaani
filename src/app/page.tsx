@@ -3,6 +3,7 @@ import { AssignedPosts } from "@/components/content/AssignedPosts";
 import { CmsTestimonials } from "@/components/content/CmsTestimonials";
 import { CmsManagedSections } from "@/components/content/CmsManagedSections";
 import { RitualServices } from "@/components/sections/home/RitualServices";
+import { Pitru } from "@/components/sections/home/Pitru";
 import {
   HeroSection,
   About,
@@ -19,6 +20,7 @@ export default function HomePage() {
       <RitualServices />
       <Kashi />
       <About />
+      <Pitru />
       <DestinationsSection />
 
       <JournalPreviewSection />

@@ -1,27 +1,35 @@
 import { Navigation, type NavigationLink } from "@/components/site";
-import { getSiteConfig } from "@/lib/site-config";
 
 const navigationItems: NavigationLink[] = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
+  { label: "About", href: "/about" },
   {
-    label: "Ritual Services",
+    label: "Rituals",
     href: "/services",
     children: [
-      { label: "Pitru Karyas in Varanasi", href: "/pitru-rituals" },
-      { label: "Dev Karyas in Varanasi", href: "/dev-rituals" },
+      { label: "Pitru Karyas", href: "/pitru-rituals" },
+      { label: "Dev Karyas", href: "/dev-rituals" },
     ],
   },
-  { label: "Contact Us", href: "/contact" },
+  {
+    label: "Destinations",
+    href: "/destinations",
+    children: [
+      { label: "Varanasi", href: "/destinations/varanasi" },
+      { label: "Gaya", href: "/destinations/gaya" },
+      { label: "Prayagraj", href: "/destinations/prayagraj" },
+    ],
+  },
+  { label: "Journal", href: "/journal" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export async function SiteNavigation() {
-  const settings = await getSiteConfig();
   return (
     <Navigation
       items={navigationItems}
-      brandName={settings.siteName}
-      logoUrl={settings.logoUrl}
+      brandName="TirthVaani"
+      logoUrl={undefined}
     />
   );
 }

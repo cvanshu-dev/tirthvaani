@@ -185,26 +185,27 @@ export function Navigation({
 
   return (
     <header className="nav" ref={headerRef}>
-      <Link className="brand" href="/">
-        {logoUrl ? (
-          <Image
-            src={logoUrl}
-            alt={brandName}
-            width={160}
-            height={48}
-            unoptimized
-            className="site-logo"
-          />
-        ) : brandName.includes(" ") ? (
-          <>{brandName}</>
-        ) : (
-          <>
-            {brandName.replace(/Vaani$/i, "")}
-            <span>{brandName.match(/Vaani$/i)?.[0] ?? ""}</span>
-          </>
-        )}
-        <small>WHERE SACRED JOURNEYS FIND THEIR MEANING</small>
-      </Link>
+   <Link className="brand" href="/">
+  {logoUrl ? (
+    <Image
+      src={logoUrl}
+      alt={brandName}
+      width={160}
+      height={48}
+      unoptimized
+      className="site-logo"
+    />
+  ) : (
+    <span className="brand-wordmark">
+      <span className="brand-main">
+        {brandName.replace(/Vaani$/i, "")}
+      </span>
+      <span className="brand-accent">
+        {brandName.match(/Vaani$/i)?.[0] ?? ""}
+      </span>
+    </span>
+  )}
+</Link>
       <nav className="nav-links">
         {navigationItems.map((item) =>
           item.children?.length ? (

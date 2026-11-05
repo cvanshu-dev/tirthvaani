@@ -1,177 +1,148 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { JournalBrowser } from "@/components/site";
-import { CTASection } from "../sections/CTASection";
-import { Eyebrow, SectionHeading, ImageBlock } from "../shared";
-import { Contact } from "./ContactPage";
 
-const articles = [
-  {
-    title: "A first visit to Varanasi: what to know",
-    slug: "first-visit-varanasi",
-    category: "Travel notes",
-    time: "6 min read",
-    image: "/hero.jpg",
-  },
-  {
-    title: "Pind Daan: meaning, setting and preparation",
-    slug: "pind-daan-meaning",
-    category: "Ritual & remembrance",
-    time: "7 min read",
-    image: "/hero.jpg",
-  },
-  {
-    title: "The quiet significance of the Triveni Sangam",
-    slug: "triveni-sangam",
-    category: "Sacred places",
-    time: "5 min read",
-    image: "/hero.jpg",
-  },
-];
+
+
+
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#a97945]">
+      {children}
+    </span>
+  );
+}
+
+import { AssignedPosts } from "@/components/content/AssignedPosts";
+import { Contact } from "./ContactPage";
 
 export function Journal() {
   return (
-     <>
-    <main>
-      <section className="journal-hero section-pad">
-        <Eyebrow>NOTES FOR THE JOURNEY</Eyebrow>
-        <h1>
-          A little more
-          <br />
-          <em>to know.</em>
-        </h1>
-        <p>
-          Context for the places we visit, the rituals we observe and the
-          questions that travel with us.
-        </p>
-      </section>
-      <section className="featured-article section-pad">
-        <Link href={`/journal/${articles[0].slug}`} className="featured-card">
-          <ImageBlock src="/hero.jpg" alt={articles[0].title} />
-          <div>
-            <Eyebrow>FEATURED · {articles[0].category}</Eyebrow>
-            <h2>{articles[0].title}</h2>
-            <p>
-              A gentle, practical introduction to the river city: its rhythms,
-              its spaces and a few useful things to consider before you arrive.
-            </p>
-            <span>
-              {articles[0].time} <ArrowUpRight size={14} />
-            </span>
-          </div>
-        </Link>
-      </section>
-      <section className="all-articles section-pad">
-        <SectionHeading
-          eyebrow="THE JOURNAL"
-          title="Stories and useful context."
+    <>
+      <main className="bg-[#f7f3ec] text-[#302018]">
+        <AssignedPosts
+          pageSlug="journal"
+          editorial={{
+            eyebrow: "THE JOURNAL",
+            heading: "Stories for the sacred road.",
+            description:
+              "Thoughtful context for rituals, destinations and meaningful journeys across India.",
+            emptyMessage:
+              "New journal articles will appear here soon.",
+            viewAllHref: "/journal",
+            viewAllLabel: "View all articles",
+          }}
         />
-        <JournalBrowser articles={articles} />
-      </section>
-      <CTASection />
-    </main>
-    <Contact />
+      </main>
+
+      <Contact />
     </>
   );
 }
+
 export function Article({ slug }: { slug: string }) {
-  const post = articles.find((article) => article.slug === slug) || articles[0];
-  const intro =
-    slug === "pind-daan-meaning"
-      ? "Pind daan is a ritual of remembrance, observed in different ways across families and regions. Understanding the setting and the questions to ask can make it easier to approach with care."
-      : slug === "triveni-sangam"
-        ? "The Sangam is a meeting of rivers and of many kinds of journeys. For pilgrims, the confluence at Prayagraj holds a deep spiritual significance."
-        : "Varanasi can feel at once intimate and immense. A little context helps visitors arrive with curiosity, patience and respect for a city that is very much alive.";
+  const post =
+    articles.find((article) => article.slug === slug) ?? articles[0];
+
   return (
-    <main>
-      <div className="breadcrumbs">
-        <Link href="/">Home</Link>
-        <span>/</span>
-        <Link href="/journal">Journal</Link>
-        <span>/</span>
-        {post.title}
-      </div>
-      <article className="article-page">
-        <header>
-          <Eyebrow>
-            {post.category.toUpperCase()} · {post.time.toUpperCase()}
-          </Eyebrow>
-          <h1>{post.title}</h1>
-          <p>{intro}</p>
-        </header>
-        <ImageBlock
-          src="/hero.jpg"
-          alt={post.title}
-          className="article-cover"
-        />
-        <div className="article-layout">
-          <aside>
-            <span>IN THIS NOTE</span>
-            <a href="#context">A little context</a>
-            <a href="#before">Before you go</a>
-            <a href="#respect">A note on respect</a>
-          </aside>
-          <div className="article-body">
-            <section id="context">
-              <h2>A little context</h2>
+    <>
+      <main className="bg-[#f7f3ec] text-[#302018]">
+        <section className="relative h-[300px] overflow-hidden bg-[#211710] sm:h-[360px]">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/55" />
+
+          <div className="relative z-10 flex h-full items-center justify-center px-6 text-center">
+            <div className="max-w-4xl">
+              <Eyebrow>{post.category}</Eyebrow>
+
+              <h1 className="mt-5 font-serif text-4xl font-normal leading-tight tracking-[-0.05em] text-[#fff8ed] sm:text-6xl">
+                {post.title}
+              </h1>
+            </div>
+          </div>
+        </section>
+
+        <article className="mx-auto max-w-3xl px-6 py-16 sm:px-10 sm:py-24">
+          <p className="font-serif text-2xl leading-relaxed text-[#302018] sm:text-3xl">
+            {post.intro}
+          </p>
+
+          <div className="my-12 flex items-center gap-3 text-[#b3834d]">
+            <span className="h-px flex-1 bg-[#d6b98f]" />
+            <span>✦</span>
+            <span className="h-px flex-1 bg-[#d6b98f]" />
+          </div>
+
+          <div className="space-y-12 text-[16px] leading-8 text-[#62554b]">
+            <section>
+              <h2 className="mb-4 font-serif text-3xl font-normal text-[#302018]">
+                A little context
+              </h2>
+
               <p>
-                {intro} These places and observances hold different meanings for
-                different people. No single account can speak for every family
-                or community, and local guidance remains important.
+                {post.intro} These places and observances hold different
+                meanings for different families and communities. Local guidance
+                is always important.
               </p>
-              <p>
-                Take time to learn the setting and the customs relevant to your
-                visit. If your family follows a particular tradition, a trusted
-                family priest is the right person to confirm the details.
+
+              <p className="mt-5">
+                Take time to understand the setting, customs and practical
+                details relevant to your visit.
               </p>
             </section>
-            <section id="before">
-              <h2>Before you go</h2>
+
+            <section>
+              <h2 className="mb-4 font-serif text-3xl font-normal text-[#302018]">
+                Before you go
+              </h2>
+
               <p>
                 Check travel timings, access and local conditions close to your
-                visit. Leave room for delays, bring what you need for the day,
-                and make sure the people travelling with you know the plan.
-              </p>
-              <p>
-                When arranging a ritual, ask what is included, who will guide
-                it, how long to allow and what your family should bring. Clear
-                questions make it easier to plan with confidence.
+                visit. Leave room for delays and make sure everyone travelling
+                with you understands the plan.
               </p>
             </section>
-            <section id="respect">
-              <h2>A note on respect</h2>
+
+            <section>
+              <h2 className="mb-4 font-serif text-3xl font-normal text-[#302018]">
+                A note on respect
+              </h2>
+
               <p>
-                Ghats, temples and riverfronts are active places of worship and
-                everyday life. Follow posted guidance, ask before photographing
-                people or ceremonies, and respect areas where photography is not
-                permitted.
+                Sacred spaces are also places of everyday life and worship.
+                Follow local guidance and ask before photographing people or
+                ceremonies.
               </p>
             </section>
           </div>
-        </div>
-      </article>
-      <section className="related section-pad">
-        <SectionHeading eyebrow="MORE TO READ" title="Continue the journey." />
-        <div className="article-grid">
-          {articles
-            .filter((article) => article.slug !== slug)
-            .map((article) => (
-              <Link
-                className="article-card"
-                href={`/journal/${article.slug}`}
-                key={article.slug}
-              >
-                <ImageBlock src="/hero.jpg" alt={article.title} />
-                <Eyebrow>{article.category}</Eyebrow>
-                <h3>{article.title}</h3>
-                <span>
-                  {article.time} <ArrowUpRight size={14} />
-                </span>
-              </Link>
-            ))}
-        </div>
-      </section>
-      <CTASection />
-    </main>
+        </article>
+
+        <section className="bg-[#fffdf9] px-6 py-20 sm:px-10 lg:px-16">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <Eyebrow>Continue reading</Eyebrow>
+            <h2 className="mt-4 font-serif text-4xl font-normal">
+              More from the journal.
+            </h2>
+          </div>
+
+          <JournalBrowser
+            articles={articles.filter((article) => article.slug !== slug)}
+          />
+        </section>
+
+        <CTASection />
+      </main>
+
+      <Contact />
+    </>
   );
 }
