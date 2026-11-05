@@ -71,15 +71,9 @@ const roleNames: Record<string, string> = {
 const pages = [
   ["Home", ""],
   ["About", "about"],
-  ["Services", "services"],
-  ["Pind Daan", "services/pind-daan"],
-  ["Asthi Visarjan", "services/asthi-visarjan"],
-  ["Shradh Karma", "services/shradh-karma"],
-  ["Brahmin Bhojan", "services/brahmin-bhojan"],
-  ["Destinations", "destinations"],
-  ["Varanasi", "destinations/varanasi"],
-  ["Gaya", "destinations/gaya"],
-  ["Prayagraj", "destinations/prayagraj"],
+
+ 
+ 
   ["Travel Assistance", "travel-assistance"],
   ["Journal", "journal"],
   ["Contact", "contact"],

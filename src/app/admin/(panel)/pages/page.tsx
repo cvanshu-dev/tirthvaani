@@ -3,6 +3,8 @@ import { Plus } from "lucide-react";
 import { requirePermission } from "@/lib/auth";
 import { getPrisma } from "@/lib/prisma";
 
+
+export const instant = false;
 export const metadata = {
   title: "Pages",
   robots: { index: false, follow: false },

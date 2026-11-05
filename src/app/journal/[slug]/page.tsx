@@ -253,36 +253,26 @@ export default async function Page({
             }}
           />
 
-          <section
-            className="pitru-hero-v2 blog-post-hero"
-            aria-labelledby="blog-post-title"
-          >
-            <Image
-              src={heroImageUrl}
-              alt={heroImageAlt}
-              fill
-              priority
-              sizes="100vw"
-              unoptimized
-              className="pitru-hero-v2-image"
-            />
+         <section
+  className="pitru-hero-v2 blog-post-hero"
+  aria-labelledby="blog-post-title"
+>
+  <Image
+    src={heroImageUrl}
+    alt={heroImageAlt}
+    fill
+    priority
+    sizes="100vw"
+    unoptimized
+    className="pitru-hero-v2-image"
+  />
 
-            <div className="pitru-hero-v2-overlay" />
+  <div className="pitru-hero-v2-overlay" />
 
-            <div className="dev-hero-simple-content">
-              <p className="blog-post-hero-kicker">
-                JOURNAL · TIRTHVAANI
-              </p>
-
-              <h1 id="blog-post-title">{post.title}</h1>
-
-              <div className="blog-post-hero-divider">
-                <span />
-                <b>✦</b>
-                <span />
-              </div>
-            </div>
-          </section>
+  <div className="dev-hero-simple-content">
+    <h1 id="blog-post-title">{post.title}</h1>
+  </div>
+</section>
 
 
           <article className="heritage-post">

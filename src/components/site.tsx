@@ -366,19 +366,7 @@ export function EnquiryForm() {
           placeholder="you@example.com"
         />
       </label>
-      <label>
-        What brings you here?
-        <select required defaultValue="">
-          <option value="" disabled>
-            Select a ritual or question
-          </option>
-          <option>Pind Daan</option>
-          <option>Asthi Visarjan</option>
-          <option>Shradh Karma</option>
-          <option>Travel planning</option>
-          <option>Something else</option>
-        </select>
-      </label>
+  
       <label>
         Your message
         <textarea
