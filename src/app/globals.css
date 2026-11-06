@@ -8661,3 +8661,65 @@ h2 em {
 .nav .brand-accent {
   color: #302018;
 }
+
+
+
+
+
+
+
+/* Hero custom cursor */
+.hero-cursor-ring {
+  transition:
+    width 300ms cubic-bezier(.2, .8, .2, 1),
+    height 300ms cubic-bezier(.2, .8, .2, 1),
+    background 300ms ease,
+    border-color 300ms ease,
+    transform 120ms linear;
+}
+
+.hero-cursor-ring.cursor-explore {
+  width: 82px;
+  height: 82px;
+  background: rgba(232, 190, 115, .2);
+  border-color: rgba(165, 9, 25, .5);
+}
+
+.hero-cursor-ring.cursor-explore .cursor-center {
+  opacity: 0;
+}
+
+.hero-cursor-ring.cursor-explore .cursor-label {
+  opacity: 1;
+}
+
+/* Floating particles */
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    opacity: .2;
+  }
+
+  50% {
+    transform: translate3d(12px, -24px, 0);
+    opacity: .8;
+  }
+}
+
+.animate-float-particle {
+  animation: floatParticle 10s ease-in-out infinite;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .hero-cursor-ring {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin,
+  .animate-pulse,
+  .animate-float-particle {
+    animation: none !important;
+  }
+}

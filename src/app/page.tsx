@@ -4,11 +4,15 @@ import { CmsTestimonials } from "@/components/content/CmsTestimonials";
 import { CmsManagedSections } from "@/components/content/CmsManagedSections";
 import { RitualServices } from "@/components/sections/home/RitualServices";
 import { Pitru } from "@/components/sections/home/Pitru";
+import { QuickServices } from "@/components/sections/home/QuickServices";
+import { Destinations } from "@/components/sections/home/Destinations";
+import { WhyChooseUs } from "@/components/sections/home/WhyChooseUs";
+
 import {
   HeroSection,
   About,
   Kashi,
- 
+
   JournalPreviewSection,
 } from "@/components/sections/home-sections";
 
@@ -16,10 +20,14 @@ export default function HomePage() {
   return (
     <main>
       <HeroSection />
+      <QuickServices />
+       <About />
+       < Destinations />
+      <WhyChooseUs />
       <AssignedPosts pageSlug="" slot="after-hero" />
       <RitualServices />
       <Kashi />
-      <About />
+     
       <Pitru />
    
 
