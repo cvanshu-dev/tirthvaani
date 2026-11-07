@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -11,10 +10,26 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+export type NavigationLink = {
+  label: string;
+  href: string;
+  target?: string;
+  children?: NavigationLink[];
+};
+
+export const defaultNavigation: NavigationLink[] = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Pitru Karyas", href: "/pitru-rituals" },
+  { label: "Dev Karyas", href: "/dev-rituals" },
+  { label: "Journal", href: "/journal" },
+  { label: "Contact", href: "/contact" },
+];
+
 export function Navigation({
   items,
   brandName = "TirthVaani",
-  logoUrl = "",
+  logoUrl = "/logo.png",
 }: {
   items?: NavigationLink[];
   brandName?: string;
@@ -70,57 +85,46 @@ export function Navigation({
       className="sticky top-0 z-[100] w-full px-4 pt-3 sm:px-6 lg:px-8 pointer-events-none"
     >
       {/* MAIN NAVBAR */}
-
       <div
         className="
           pointer-events-auto relative mx-auto
           flex h-[70px] max-w-[1380px]
           items-center justify-between
           rounded-full
-          border border-white/65
-          bg-[#fffaf3]/55
+          border border-white/70
+          bg-[#FBF8F1]/65
           px-5 sm:px-7 lg:px-9
-          shadow-[0_4px_24px_rgba(68,48,29,0.055),inset_0_1px_0_rgba(255,255,255,0.8)]
+          shadow-[0_4px_24px_rgba(53,75,59,0.07),inset_0_1px_0_rgba(255,255,255,0.85)]
           backdrop-blur-[32px]
           backdrop-saturate-[180%]
-          transition-[background,box-shadow,border-color] duration-500
-          hover:bg-[#fffaf3]/65
+          transition-all duration-500
+          hover:bg-[#FBF8F1]/80
         "
       >
-        {/* Soft glass reflection */}
+        {/* Glass reflection */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
           <div className="absolute inset-x-[10%] top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
         </div>
 
-        {/* LOGO */}
-
+        {/* IMAGE LOGO */}
         <Link
           href="/"
           onClick={closeMenu}
           aria-label={`${brandName} home`}
           className="relative z-10 flex shrink-0 items-center"
         >
-          {logoUrl ? (
-            <Image
-              src={logoUrl}
-              alt={brandName}
-              width={175}
-              height={55}
-              unoptimized
-              className="h-[43px] w-auto object-contain"
-            />
-          ) : (
-            <span className="font-serif text-[29px] font-medium tracking-[-1.5px] text-[#493629]">
-              {brandName.replace(/Vaani$/i, "")}
-              <span className="italic text-[#ad8049]">
-                {brandName.match(/Vaani$/i)?.[0] ?? ""}
-              </span>
-            </span>
-          )}
+          <Image
+            src={logoUrl}
+            alt={`${brandName} logo`}
+            width={190}
+            height={60}
+            priority
+            unoptimized
+            className="h-[44px] w-auto object-contain"
+          />
         </Link>
 
         {/* DESKTOP NAVIGATION */}
-
         <nav
           aria-label="Main navigation"
           className="relative z-10 hidden items-center gap-1 lg:flex"
@@ -148,8 +152,8 @@ export function Navigation({
                       transition-all duration-300
                       ${
                         servicesOpen
-                          ? "bg-white/65 text-[#9b7545] shadow-[0_2px_8px_rgba(60,40,20,0.04)]"
-                          : "text-[#594638] hover:bg-white/55 hover:text-[#9b7545]"
+                          ? "bg-white/70 text-[#B65F38] shadow-[0_2px_8px_rgba(53,75,59,0.04)]"
+                          : "text-[#354B3B] hover:bg-white/60 hover:text-[#B65F38]"
                       }
                     `}
                   >
@@ -164,8 +168,7 @@ export function Navigation({
                     />
                   </button>
 
-                  {/* FLUID DROPDOWN */}
-
+                  {/* DROPDOWN */}
                   <div
                     id="apple-services-menu"
                     aria-hidden={!servicesOpen}
@@ -173,10 +176,10 @@ export function Navigation({
                       absolute left-1/2 top-full z-50
                       mt-3 w-[350px] -translate-x-1/2
                       rounded-[24px]
-                      border border-white/75
-                      bg-[#fffaf3]/80
+                      border border-white/80
+                      bg-[#FBF8F1]/90
                       p-2
-                      shadow-[0_20px_60px_rgba(65,45,26,0.12)]
+                      shadow-[0_20px_60px_rgba(53,75,59,0.12)]
                       backdrop-blur-[35px]
                       backdrop-saturate-[180%]
                       transition-all duration-500
@@ -188,12 +191,12 @@ export function Navigation({
                       }
                     `}
                   >
-                    <div className="rounded-[17px] bg-white/35 px-5 pb-5 pt-5">
-                      <p className="font-sans text-[9px] font-semibold uppercase tracking-[2px] text-[#a77b43]">
+                    <div className="rounded-[17px] bg-white/40 px-5 pb-5 pt-5">
+                      <p className="font-sans text-[9px] font-semibold uppercase tracking-[2px] text-[#71816D]">
                         Explore our traditions
                       </p>
 
-                      <h3 className="mt-2 font-serif text-[23px] leading-tight text-[#493629]">
+                      <h3 className="mt-2 font-serif text-[23px] leading-tight text-[#354B3B]">
                         Every ritual has
                         <br />
                         a deeper meaning.
@@ -216,29 +219,29 @@ export function Navigation({
                           "
                         >
                           <div className="flex items-center gap-4">
-                            <span className="font-serif text-[12px] italic text-[#b18a55]">
+                            <span className="font-serif text-[12px] italic text-[#B65F38]">
                               0{index + 1}
                             </span>
 
-                            <span className="font-serif text-[15px] text-[#594638] transition-colors group-hover:text-[#a77b43]">
+                            <span className="font-serif text-[15px] text-[#354B3B] transition-colors group-hover:text-[#B65F38]">
                               {child.label}
                             </span>
                           </div>
 
                           <ArrowUpRight
                             size={15}
-                            className="text-[#a77b43] opacity-50 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:opacity-100"
+                            className="text-[#B65F38] opacity-50 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:opacity-100"
                           />
                         </Link>
                       ))}
                     </div>
 
-                    <div className="border-t border-[#b18a55]/15 px-4 py-3">
+                    <div className="border-t border-[#71816D]/20 px-4 py-3">
                       <Link
                         href={item.href}
                         onClick={closeMenu}
                         tabIndex={servicesOpen ? 0 : -1}
-                        className="flex items-center justify-between rounded-lg px-2 py-2 font-sans text-[9px] font-bold uppercase tracking-[1.6px] text-[#92734d] transition-colors hover:text-[#493629]"
+                        className="flex items-center justify-between rounded-lg px-2 py-2 font-sans text-[9px] font-bold uppercase tracking-[1.6px] text-[#71816D] transition-colors hover:text-[#B65F38]"
                       >
                         View all services
                         <ArrowUpRight size={14} />
@@ -259,10 +262,10 @@ export function Navigation({
                   px-4 py-3
                   font-sans text-[10px] font-semibold
                   uppercase tracking-[1.5px]
-                  text-[#594638]
+                  text-[#354B3B]
                   transition-all duration-300
-                  hover:bg-white/55
-                  hover:text-[#9b7545]
+                  hover:bg-white/60
+                  hover:text-[#B65F38]
                 "
               >
                 {item.label}
@@ -271,41 +274,41 @@ export function Navigation({
           })}
         </nav>
 
-        {/* CTA */}
-
+        {/* DESKTOP CTA */}
         <div className="relative z-10 hidden lg:flex">
           <Link
             href={contactHref}
             className="
               group flex h-[43px] items-center gap-3
               rounded-full
-              border border-[#ad8a5a]/40
-              bg-[#8d7453]
+              border border-[#A95130]/35
+              bg-[#B65F38]
               py-1 pl-5 pr-1
               font-sans text-[9px] font-bold
               uppercase tracking-[1.5px]
-              text-[#fffaf0]
-              shadow-[0_3px_12px_rgba(91,68,42,0.10)]
+              text-[#FFF8EF]
+              shadow-[0_3px_12px_rgba(53,75,59,0.10)]
               transition-all duration-500
-              hover:bg-[#745b3d]
-              hover:shadow-[0_7px_20px_rgba(91,68,42,0.17)]
+              hover:bg-[#A95130]
+              hover:shadow-[0_7px_20px_rgba(53,75,59,0.17)]
             "
           >
             <span>Plan your journey</span>
 
-            <span className="
-              flex h-[34px] w-[34px] items-center justify-center
-              rounded-full bg-white/15
-              transition-all duration-500
-              group-hover:rotate-45 group-hover:bg-white/25
-            ">
+            <span
+              className="
+                flex h-[34px] w-[34px] items-center justify-center
+                rounded-full bg-white/15
+                transition-all duration-500
+                group-hover:rotate-45 group-hover:bg-white/25
+              "
+            >
               <ArrowUpRight size={15} strokeWidth={1.5} />
             </span>
           </Link>
         </div>
 
         {/* MOBILE MENU BUTTON */}
-
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -317,10 +320,10 @@ export function Navigation({
           className="
             relative z-[110] flex h-10 w-10
             items-center justify-center
-            rounded-full border border-white/75
-            bg-white/40 text-[#594638]
+            rounded-full border border-white/80
+            bg-white/50 text-[#354B3B]
             transition-all duration-300
-            hover:bg-white/80
+            hover:bg-white/85
             lg:hidden
           "
         >
@@ -333,17 +336,16 @@ export function Navigation({
       </div>
 
       {/* MOBILE MENU */}
-
       <div
         aria-hidden={!open}
         className={`
           pointer-events-auto absolute left-4 right-4 top-[calc(100%+10px)]
           z-[105] overflow-hidden
           rounded-[24px]
-          border border-white/75
-          bg-[#fffaf3]/85
+          border border-white/80
+          bg-[#FBF8F1]/95
           p-2
-          shadow-[0_18px_50px_rgba(65,45,26,0.12)]
+          shadow-[0_18px_50px_rgba(53,75,59,0.12)]
           backdrop-blur-[35px]
           backdrop-saturate-[180%]
           transition-all duration-500
@@ -356,12 +358,12 @@ export function Navigation({
           }
         `}
       >
-        <div className="rounded-[17px] bg-white/30 px-5 py-5">
-          <p className="font-sans text-[9px] font-semibold uppercase tracking-[2px] text-[#a77b43]">
+        <div className="rounded-[17px] bg-white/40 px-5 py-5">
+          <p className="font-sans text-[9px] font-semibold uppercase tracking-[2px] text-[#71816D]">
             Welcome to TirthVaani
           </p>
 
-          <p className="mt-2 font-serif text-[23px] text-[#493629]">
+          <p className="mt-2 font-serif text-[23px] text-[#354B3B]">
             Find your sacred path.
           </p>
         </div>
@@ -372,7 +374,7 @@ export function Navigation({
               return (
                 <div
                   key={item.href + item.label}
-                  className="border-b border-[#b18a55]/15"
+                  className="border-b border-[#71816D]/20"
                 >
                   <button
                     type="button"
@@ -383,15 +385,15 @@ export function Navigation({
                     className="
                       flex w-full items-center justify-between
                       rounded-xl px-3 py-4
-                      font-serif text-[19px] text-[#493629]
-                      transition-colors hover:bg-white/50
+                      font-serif text-[19px] text-[#354B3B]
+                      transition-colors hover:bg-white/60
                     "
                   >
                     {item.label}
 
                     <ChevronDown
                       size={17}
-                      className={`text-[#a77b43] transition-transform duration-300 ${
+                      className={`text-[#B65F38] transition-transform duration-300 ${
                         servicesOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -415,7 +417,7 @@ export function Navigation({
                             tabIndex={
                               open && servicesOpen ? 0 : -1
                             }
-                            className="flex items-center justify-between py-3 font-serif text-[15px] text-[#856c53] hover:text-[#a77b43]"
+                            className="flex items-center justify-between py-3 font-serif text-[15px] text-[#667467] hover:text-[#B65F38]"
                           >
                             {child.label}
                             <ArrowUpRight size={14} />
@@ -436,16 +438,16 @@ export function Navigation({
                 onClick={closeMenu}
                 className="
                   flex items-center justify-between
-                  rounded-xl border-b border-[#b18a55]/15
+                  rounded-xl border-b border-[#71816D]/20
                   px-3 py-4
-                  font-serif text-[19px] text-[#493629]
+                  font-serif text-[19px] text-[#354B3B]
                   transition-all duration-300
-                  hover:bg-white/50 hover:text-[#a77b43]
+                  hover:bg-white/60 hover:text-[#B65F38]
                 "
               >
                 {item.label}
 
-                <span className="font-sans text-[10px] text-[#b18a55]">
+                <span className="font-sans text-[10px] text-[#819078]">
                   0{index + 1}
                 </span>
               </Link>
@@ -459,12 +461,12 @@ export function Navigation({
             onClick={closeMenu}
             className="
               flex h-[51px] items-center justify-between
-              rounded-full bg-[#8d7453]
+              rounded-full bg-[#B65F38]
               pl-5 pr-2
               font-sans text-[10px] font-bold
               uppercase tracking-[1.5px]
-              text-[#fffaf0]
-              transition-colors hover:bg-[#745b3d]
+              text-[#FFF8EF]
+              transition-colors hover:bg-[#A95130]
             "
           >
             Plan your sacred journey
@@ -475,7 +477,7 @@ export function Navigation({
           </Link>
         </div>
 
-        <p className="pb-3 pt-2 text-center font-serif text-[12px] italic text-[#a58a6b]">
+        <p className="pb-3 pt-2 text-center font-serif text-[12px] italic text-[#819078]">
           Rooted in tradition. Guided with care.
         </p>
       </div>

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getPrisma } from "@/lib/prisma";
-
+import { connection } from "next/server";
 export async function CmsJournalEntries() {
+    await connection();
   const db = getPrisma();
   if (!db) return null;
   const posts = await db.post.findMany({

@@ -1,107 +1,170 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const reveal = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease },
+  },
+};
+
 export function About() {
+  const imageRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ["start end", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
+
   return (
-    <section className="relative isolate overflow-hidden bg-[#faf1e7] px-5 py-20 text-[#35281e] md:px-12 lg:px-24 lg:py-32">
-      {/* Large background circle */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[850px] w-[850px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cba77d]/25" />
+    <section className="relative overflow-hidden bg-[#FBF8F1] px-[6%] py-14 text-[#354B3B] sm:py-16 lg:py-20">
+      {/* Background detail */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full bg-[#819078]/[0.07]"
+      />
 
-      {/* Horizontal decorative lines */}
-      <div className="pointer-events-none absolute left-[4%] right-[4%] top-[12%] border-t border-[#cba77d]/25" />
-      <div className="pointer-events-none absolute bottom-[12%] left-[4%] right-[4%] border-t border-[#cba77d]/25" />
+      <div className="relative mx-auto grid w-full max-w-[1440px] items-center gap-8 md:grid-cols-[0.95fr_1.05fr] md:gap-16 lg:gap-20 xl:gap-[96px]">
+        {/* IMAGE */}
+        <motion.div
+          ref={imageRef}
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.9, ease }}
+          className="relative w-full"
+        >
+          <div className="group relative h-[340px] overflow-hidden rounded-[3px_76px_3px_3px] bg-[#354B3B] sm:h-[420px] md:h-[460px] lg:h-[510px] xl:h-[540px]">
+            <motion.div
+              className="absolute inset-0"
+              style={{ y: reducedMotion ? 0 : imageY }}
+            >
+              <Image
+                src="/hero.jpg"
+                alt="Ganga Aarti beside the River Ganga in Varanasi"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 48vw"
+                className="object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.045]"
+              />
+            </motion.div>
 
-      {/* Central ornament */}
-      <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 hidden w-px -translate-x-1/2 bg-[#b98a5a]/45 lg:block" />
-      <div className="pointer-events-none absolute left-1/2 top-7 hidden h-3 w-3 -translate-x-1/2 rotate-45 bg-[#bd9068] lg:block" />
-      <div className="pointer-events-none absolute bottom-7 left-1/2 hidden h-3 w-3 -translate-x-1/2 rotate-45 bg-[#bd9068] lg:block" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#18271E]/75 via-[#18271E]/10 to-transparent" />
 
-      {/* Top circle ornament */}
-      <div className="pointer-events-none absolute left-1/2 top-[-55px] hidden h-28 w-28 -translate-x-1/2 rounded-full border border-[#cba77d]/35 lg:block" />
+          
+            <div className="absolute bottom-7 left-6 right-6 sm:bottom-9 sm:left-8 sm:right-8">
+             
 
-      {/* Botanical corner details */}
-      <div className="pointer-events-none absolute bottom-0 left-0 hidden h-36 w-36 opacity-40 md:block">
-        <span className="absolute bottom-8 left-5 h-24 w-12 -rotate-45 rounded-[100%_0] border border-[#cba77d]" />
-        <span className="absolute bottom-5 left-14 h-20 w-10 rotate-[35deg] rounded-[100%_0] border border-[#cba77d]" />
-        <span className="absolute bottom-2 left-24 h-16 w-8 rotate-[65deg] rounded-[100%_0] border border-[#cba77d]" />
-      </div>
+              <h3 className="font-serif text-[clamp(4rem,7vw,6.5rem)] leading-[0.85] tracking-[-0.06em] text-white">
+                Kashi<span className="text-[#B65F38]">.</span>
+              </h3>
 
-      <div className="pointer-events-none absolute bottom-0 right-0 hidden h-36 w-36 rotate-180 opacity-40 md:block">
-        <span className="absolute bottom-8 left-5 h-24 w-12 -rotate-45 rounded-[100%_0] border border-[#cba77d]" />
-        <span className="absolute bottom-5 left-14 h-20 w-10 rotate-[35deg] rounded-[100%_0] border border-[#cba77d]" />
-        <span className="absolute bottom-2 left-24 h-16 w-8 rotate-[65deg] rounded-[100%_0] border border-[#cba77d]" />
-      </div>
-
-      <div className="relative z-10 mx-auto grid max-w-[1290px] items-center gap-14 lg:grid-cols-2 lg:gap-24">
-        {/* Image panel */}
-        <div className="relative h-[470px] overflow-hidden rounded-[30px_145px_30px_30px] bg-[#38271d] shadow-[0_25px_60px_rgba(70,42,20,0.16)] md:h-[650px]">
-          <Image
-            src="/hero.jpg"
-            alt="Priest performing Ganga Aarti beside the River Ganga in Varanasi"
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10" />
-
-          {/* Image corner frame */}
-          <div className="absolute left-5 top-5 h-12 w-12 border-l border-t border-[#f5dfb8]/80" />
-          <div className="absolute bottom-5 right-5 h-12 w-12 border-b border-r border-[#f5dfb8]/80" />
-
-          <div className="absolute bottom-6 left-7 right-7 flex items-center gap-4 text-[11px] tracking-[0.3em] text-white md:text-sm">
-            <span>VARANASI</span>
-            <span className="h-px flex-1 bg-white/60" />
-            <span>THE ETERNAL CITY</span>
+              <div className="mt-5 flex items-center gap-4">
+                <span className="text-[9px] tracking-[0.23em] text-white/85">
+                  VARANASI
+                </span>
+                <span className="h-px w-12 bg-white/50" />
+                <span className="text-[9px] tracking-[0.2em] text-white/65">
+                  INDIA
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Text panel */}
-        <div className="max-w-[590px]">
-          <p className="mb-7 text-xs font-semibold tracking-[0.35em] text-[#a96835] md:text-sm">
-            OUR HERITAGE <span className="px-2">·</span> OUR FAITH
-          </p>
+        {/* CONTENT */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ staggerChildren: 0.12 }}
+          className="relative flex w-full min-w-0 flex-col justify-center md:py-2"
+        >
+          {/* Eyebrow */}
+          <motion.div
+            variants={reveal}
+            className="mb-5 flex flex-wrap items-center gap-3"
+          >
+            
+         
+          </motion.div>
 
-          <h2 className="font-serif text-[48px] font-normal leading-[0.98] tracking-[-2px] md:text-[76px]">
+          {/* Heading */}
+          <motion.h2
+            variants={reveal}
+            className="max-w-[650px] font-serif text-[clamp(2.7rem,4.7vw,5rem)] leading-[0.98] tracking-[-0.055em] text-[#354B3B]"
+          >
             Culturally and
-            <em className="block text-[#bd8146]">Spiritually</em>
-            Rooted in Kashi.
-          </h2>
+            <span className="block italic text-[#B65F38]">
+              spiritually
+            </span>
+            rooted in Kashi.
+          </motion.h2>
 
-          <div className="my-9 flex w-24 items-center gap-2">
-            <span className="h-px flex-1 bg-[#ae7845]" />
-            <span className="h-2 w-2 rotate-45 bg-[#ae7845]" />
-            <span className="h-px flex-1 bg-[#ae7845]" />
-          </div>
+          {/* Decorative divider */}
+          <motion.div
+            variants={reveal}
+            className="my-6 flex items-center gap-2"
+          >
+            <span className="h-[2px] w-12 bg-[#B65F38]" />
+            <span className="h-[2px] w-5 bg-[#819078]/70" />
+            <span className="h-[2px] w-2 bg-[#819078]/35" />
+          </motion.div>
 
-          <p className="mb-6 font-serif text-base leading-7 text-[#66584e] md:text-lg">
-            Varanasi, one of India’s most sacred cities, is deeply rooted in
-            ancient traditions and spiritual wisdom. Revered as the city of
-            Lord Shiva, Kashi holds a timeless place in the journey towards
-            spiritual liberation and moksha.
-          </p>
+          {/* Description */}
+          <motion.p
+            variants={reveal}
+            className="mb-4 w-full font-serif text-[14px] leading-[1.85] text-[#667467] sm:text-[15px] lg:text-[16px]"
+          >
+            Varanasi, one of India&apos;s most sacred cities, is deeply rooted
+            in ancient traditions and spiritual wisdom. Revered as the city
+            of Lord Shiva, Kashi holds a timeless place in the journey
+            towards spiritual liberation and moksha.
+          </motion.p>
 
-          <p className="mb-9 font-serif text-base leading-7 text-[#66584e] md:text-lg">
+          <motion.p
+            variants={reveal}
+            className="mb-7 max-w-[590px] font-serif text-[14px] leading-[1.85] text-[#667467] sm:text-[15px] lg:text-[16px]"
+          >
             At Tirth Kshetra Purohit, we connect devotees with experienced
             Pandits and Purohits for authentic Vedic homams, pujas and sacred
             rituals in Kashi, helping preserve traditions and make every
             spiritual journey meaningful.
-          </p>
+          </motion.p>
 
-          <Link
-            href="/about-us"
-            className="group inline-flex items-center gap-8 rounded-full border border-[#bd8b60] px-7 py-4 font-serif text-base text-[#493328] transition-all duration-300 hover:-translate-y-1 hover:bg-[#a95731] hover:text-white"
-          >
-            <span>More About Us</span>
-            <ArrowUpRight
-              size={20}
-              strokeWidth={1.5}
-              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-            />
-          </Link>
-        </div>
+          {/* CTA */}
+          <motion.div variants={reveal}>
+            <Link
+              href="/about-us"
+              className="group inline-flex items-center gap-5 rounded-full bg-[#B65F38] py-2 pl-6 pr-2 text-[#FFF8EF] shadow-[0_6px_18px_rgba(53,75,59,0.10)] transition-all duration-500 hover:-translate-y-1 hover:bg-[#A95130] hover:shadow-[0_12px_25px_rgba(53,75,59,0.16)]"
+            >
+              <span className="font-serif text-[15px]">
+                More About Us
+              </span>
+
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 transition-all duration-500 group-hover:rotate-45 group-hover:bg-white/10">
+                <ArrowUpRight size={17} strokeWidth={1.5} />
+              </span>
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

@@ -9,23 +9,10 @@ import {
   extractMarkdownHeadings,
 } from "@/components/content/MarkdownContent";
 import { Contact } from "@/components/pages/ContactPage";
-import { Article } from "@/components/pages/JournalPages";
+
 import { getPrisma } from "@/lib/prisma";
 
-const articles = [
-  {
-    slug: "first-visit-varanasi",
-    title: "A first visit to Varanasi: what to know",
-  },
-  {
-    slug: "pind-daan-meaning",
-    title: "Pind Daan: meaning, setting and preparation",
-  },
-  {
-    slug: "triveni-sangam",
-    title: "The quiet significance of the Triveni Sangam",
-  },
-];
+
 
 type FixedPostContent = {
   format: "fixed-post-v1";
@@ -72,9 +59,7 @@ function getLegacyText(value: unknown): string {
   return value.text;
 }
 
-export function generateStaticParams() {
-  return articles.map(({ slug }) => ({ slug }));
-}
+
 
 export async function generateMetadata({
   params,
@@ -154,15 +139,12 @@ export async function generateMetadata({
     };
   }
 
-  const article = articles.find((item) => item.slug === slug);
-
-  return {
-    title: article?.title || "Journal article",
-    description:
-      "Useful context and thoughtful reading for your sacred journey.",
-  };
+return {
+  title: "Journal article",
+  description:
+    "Useful context and thoughtful reading for your sacred journey.",
+};
 }
-
 export default async function Page({
   params,
 }: {
@@ -331,9 +313,5 @@ export default async function Page({
     );
   }
 
-  if (!articles.some((article) => article.slug === slug)) {
-    notFound();
-  }
-
-  return <Article slug={slug} />;
+notFound();
 }

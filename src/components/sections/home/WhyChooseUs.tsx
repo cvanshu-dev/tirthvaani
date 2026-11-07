@@ -1,16 +1,15 @@
-
 "use client";
 
-import { motion } from "framer-motion";
+import { useReducedMotion, motion } from "framer-motion";
 import {
   UsersRound,
   ReceiptText,
   HandHeart,
   ShieldCheck,
   Sparkles,
-  ArrowUpRight,
   Check,
   Compass,
+  ArrowUpRight,
 } from "lucide-react";
 
 const features = [
@@ -18,9 +17,9 @@ const features = [
     number: "01",
     title: "Gotra-Specific Purohits",
     description:
-      "Every family has its own traditions. We help connect you with experienced purohits who understand your Gotra, customs and specific ritual requirements.",
+      "Every family has its own traditions. We connect you with experienced purohits who understand your Gotra, customs and specific ritual requirements.",
     icon: UsersRound,
-    detail: "Rooted in your traditions",
+    
   },
   {
     number: "02",
@@ -28,15 +27,15 @@ const features = [
     description:
       "Know exactly what you are paying for. Get a clear breakdown of ritual arrangements, samagri and associated expenses before confirming your booking.",
     icon: ReceiptText,
-    detail: "No unexpected expenses",
+  
   },
   {
     number: "03",
     title: "End-to-End Assistance",
     description:
-      "From your first conversation to the completion of your ceremony, we coordinate the arrangements and guide you through every important detail.",
+      "From your first conversation to the completion of your ceremony, we coordinate arrangements and guide you through every important detail.",
     icon: HandHeart,
-    detail: "Support at every step",
+  
   },
   {
     number: "04",
@@ -44,176 +43,230 @@ const features = [
     description:
       "We stay involved throughout the ceremony, helping coordinate arrangements and monitor the proceedings to ensure everything follows the agreed plan.",
     icon: ShieldCheck,
-    detail: "Carefully coordinated rituals",
+  
   },
 ];
 
-export function WhyChooseUs() {
-  return (
-    <section className="relative overflow-hidden bg-[#F8F6F0] py-24 md:py-32">
+const highlights = [
+  "Ritual arrangements",
+  "Trusted purohits",
+  "Travel assistance",
+  "Accommodation",
+];
 
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute -left-60 top-20 h-[500px] w-[500px] rounded-full border border-[#B58B4B]/[0.08]" />
-      <div className="pointer-events-none absolute -left-40 top-40 h-[350px] w-[350px] rounded-full border border-[#B58B4B]/[0.08]" />
+const reveal = {
+  hidden: {
+    opacity: 0,
+    y: 32,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+};
+
+export function WhyChooseUs() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section className="relative isolate overflow-hidden bg-[#FBF8F1] py-16 text-[#354B3B] md:py-20">
+      {/* Background atmosphere */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-[260px] top-[5%] h-[620px] w-[620px] rounded-full border border-[#819078]/[0.13]" />
+        <div className="absolute -left-[190px] top-[12%] h-[480px] w-[480px] rounded-full border border-[#819078]/[0.13]" />
+        <div className="absolute -right-[300px] top-[38%] h-[620px] w-[620px] rounded-full border border-[#B65F38]/[0.08]" />
+
+        <div className="absolute right-[8%] top-[10%] h-[280px] w-[280px] rounded-full bg-[#B65F38]/[0.035] blur-[100px]" />
+      </div>
 
       <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 lg:px-16">
-
-        {/* SECTION INTRO */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-
-          {/* LEFT SIDE */}
+        {/* MAIN SECTION */}
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 xl:gap-16">
+          {/* LEFT INTRO */}
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.75 }}
-            className="flex flex-col justify-between"
+            variants={reveal}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="flex h-full flex-col justify-between"
           >
             <div>
+              {/* Eyebrow */}
               <div className="mb-7 flex items-center gap-3">
-                <span className="h-px w-9 bg-[#AD8249]" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#A47B40]">
-                  The Tirthvaani Difference
-                </span>
+                <motion.span
+                  initial={{ width: 0 }}
+                  whileInView={{ width: 36 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="h-px bg-[#B65F38]"
+                />
+
+
               </div>
 
-              <h2 className="font-serif text-[43px] leading-[1.08] tracking-[-0.035em] text-[#30291F] sm:text-5xl lg:text-[65px]">
-                Your faith
-                <br />
-                deserves
-                <br />
-                <span className="italic text-[#A67B42]">
+              {/* Heading */}
+              <h2 className="max-w-[560px] font-serif text-[clamp(42px,5vw,72px)] leading-[1.04] tracking-[-0.045em] text-[#354B3B]">
+                Your faith deserves{" "}
+                <span className="relative inline-block italic text-[#B65F38]">
                   thoughtful care.
+                  <motion.span
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.9,
+                      delay: 0.5,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="absolute -bottom-2 left-0 h-px w-full origin-left bg-[#B65F38]/45"
+                  />
                 </span>
               </h2>
 
-              <p className="mt-8 max-w-[410px] text-[14px] leading-[2] text-[#777064] md:text-[15px]">
-                Sacred rituals deserve more than arrangements.
-                They deserve understanding, attention and respect
-                for the traditions that make them meaningful.
-                At Tirthvaani, we bring every detail together
-                so you can focus on what truly matters.
+              <p className="mt-8 max-w-[490px] text-[13px] leading-[2] text-[#667467] sm:text-[14px] lg:text-[15px]">
+                Sacred rituals deserve more than arrangements. They
+                deserve understanding, attention and respect for the
+                traditions that make them meaningful. At Tirthvaani,
+                we bring every detail together so you can focus on
+                what truly matters.
               </p>
             </div>
 
             {/* Trust statement */}
-            <div className="mt-12 flex items-center gap-5 border-t border-[#DED6C9] pt-7 lg:mt-16">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#C5A574]/50">
-                <Sparkles
-                  size={19}
-                  strokeWidth={1.3}
-                  className="text-[#A47B40]"
-                />
-              </div>
+            <div className="mt-8 flex items-center gap-4 border-t border-[#819078]/25 pt-5 sm:mt-10 lg:mt-12">
+              
+            
+                
+             
 
-              <div>
-                <p className="font-serif text-lg text-[#40372B]">
-                  Tradition, with care.
-                </p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.17em] text-[#898174]">
-                  Every detail matters
-                </p>
-              </div>
             </div>
           </motion.div>
 
-          {/* RIGHT SIDE - FEATURE CARDS */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-            {features.map((feature, index) => {
+          {/* RIGHT FEATURE GRID */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.12 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.12,
+                  delayChildren: 0.08,
+                },
+              },
+            }}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+          >
+            {features.map((feature) => {
               const Icon = feature.icon;
 
               return (
-                <motion.div
+                <motion.article
                   key={feature.number}
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{
-                    duration: 0.65,
-                    delay: index * 0.09,
-                    ease: [0.22, 1, 0.36, 1],
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 30,
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.7,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                    },
                   }}
-                  className="group relative flex min-h-[290px] flex-col overflow-hidden border border-[#E5DED1] bg-[#FCFAF5] p-7 transition-all duration-500 hover:border-[#C8AB7C] hover:bg-white md:p-8"
+                  whileHover={
+                    reduceMotion
+                      ? undefined
+                      : {
+                          y: -6,
+                          transition: {
+                            duration: 0.3,
+                            ease: "easeOut",
+                          },
+                        }
+                  }
+                  className="group relative flex min-h-[215px] flex-col overflow-hidden border border-[#819078]/25 bg-white/55 p-5 transition-colors duration-500 hover:border-[#B65F38]/45 hover:bg-white/85 sm:min-h-[225px] sm:p-6 lg:p-6"
                 >
+                  {/* Subtle hover glow */}
+                  <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#B65F38]/[0.045] opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100" />
 
-                  {/* Number */}
-                  <div className="flex items-start justify-between">
-                    <span className="font-serif text-[13px] italic text-[#AD8A56]">
+                  {/* Card top */}
+                  <div className="relative flex items-start justify-between">
+                    <span className="font-serif text-[14px] italic text-[#819078]">
                       {feature.number}
                     </span>
 
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E5DCCB] bg-[#F8F4EB] transition-all duration-500 group-hover:border-[#B28C55] group-hover:bg-[#B28C55]">
+                    <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[#B65F38]/25 bg-[#B65F38]/[0.06] transition-all duration-500 group-hover:border-[#B65F38] group-hover:bg-[#B65F38]">
                       <Icon
                         size={19}
-                        strokeWidth={1.4}
-                        className="text-[#A47B40] transition-colors duration-500 group-hover:text-white"
+                        strokeWidth={1.35}
+                        className="text-[#B65F38] transition-colors duration-500 group-hover:text-[#FFF8EF]"
                       />
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="mt-auto pt-12">
-                    <h3 className="font-serif text-[25px] leading-tight tracking-[-0.02em] text-[#30291F] md:text-[27px]">
+                  {/* Card content */}
+                  <div className="relative mt-auto pt-8">
+                    <h3 className="max-w-[280px] font-serif text-[24px] leading-[1.12] tracking-[-0.025em] text-[#354B3B] sm:text-[25px] lg:text-[27px]">
                       {feature.title}
                     </h3>
 
-                    <p className="mt-4 text-[12px] leading-[1.95] text-[#777064] md:text-[13px]">
+                    <p className="mt-4 text-[12px] leading-[1.85] text-[#667467] sm:text-[12.5px]">
                       {feature.description}
                     </p>
 
-                    <div className="mt-6 flex items-center gap-2">
-                      <span className="h-px w-5 bg-[#B58B4B] transition-all duration-500 group-hover:w-9" />
-                      <span className="text-[9px] font-medium uppercase tracking-[0.17em] text-[#A47B40]">
-                        {feature.detail}
-                      </span>
-                    </div>
+                    {/* Bottom detail */}
+            
                   </div>
 
-                  {/* Decorative hover detail */}
-                  <div className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full border border-[#B58B4B]/10 transition-transform duration-700 group-hover:scale-150" />
-
-                </motion.div>
+                  {/* Decorative corner rings */}
+                  <div className="pointer-events-none absolute -bottom-14 -right-14 h-32 w-32 rounded-full border border-[#819078]/15 transition-transform duration-700 group-hover:scale-125" />
+                  <div className="pointer-events-none absolute -bottom-10 -right-10 h-24 w-24 rounded-full border border-[#819078]/10 transition-transform duration-700 group-hover:scale-125" />
+                </motion.article>
               );
             })}
-
-          </div>
+          </motion.div>
         </div>
 
         {/* BOTTOM BRAND STATEMENT */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.75 }}
-          className="relative mt-20 overflow-hidden bg-[#293B30] px-7 py-12 md:mt-24 md:px-14 md:py-14 lg:px-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.18 }}
+          variants={reveal}
+          className="relative mt-10 overflow-hidden bg-[#354B3B] px-6 py-7 sm:mt-12 sm:px-9 sm:py-8 lg:mt-12 lg:px-12 lg:py-9"
         >
+          {/* Background details */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -right-24 -top-44 h-[420px] w-[420px] rounded-full border border-[#FFF8EF]/[0.12]" />
+            <div className="absolute -right-8 -top-28 h-[300px] w-[300px] rounded-full border border-[#FFF8EF]/[0.12]" />
+            <div className="absolute right-12 -top-12 h-[190px] w-[190px] rounded-full border border-[#FFF8EF]/[0.10]" />
+            <div className="absolute -left-24 -bottom-40 h-[300px] w-[300px] rounded-full bg-[#B65F38]/[0.10] blur-[80px]" />
+          </div>
 
-          {/* Decorative rings */}
-          <div className="pointer-events-none absolute -right-16 -top-36 h-[390px] w-[390px] rounded-full border border-[#D9BD8D]/15" />
-          <div className="pointer-events-none absolute -right-4 -top-24 h-[270px] w-[270px] rounded-full border border-[#D9BD8D]/15" />
-          <div className="pointer-events-none absolute -right-16 -top-10 h-[150px] w-[150px] rounded-full border border-[#D9BD8D]/10" />
-
-          <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_auto]">
-
+          <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+            {/* Closing message */}
             <div>
               <div className="mb-6 flex items-center gap-3">
-                <span className="h-px w-8 bg-[#D9BD8D]" />
-                <span className="text-[9px] font-semibold uppercase tracking-[0.28em] text-[#D9BD8D]">
-                  More than just rituals
-                </span>
+            
               </div>
 
-              <h3 className="max-w-[780px] font-serif text-[36px] leading-[1.13] tracking-[-0.025em] text-[#F8F5EC] md:text-5xl lg:text-[57px]">
-                Everything your sacred
-                <br className="hidden sm:block" />
-                journey needs,{" "}
-                <span className="italic text-[#D9BD8D]">
+              <h3 className="max-w-[800px] font-serif text-[clamp(34px,4.4vw,58px)] leading-[1.1] tracking-[-0.035em] text-[#FFF8EF]">
+                Everything your sacred journey needs,{" "}
+                <span className="italic text-[#E5A080]">
                   in one place.
                 </span>
               </h3>
 
-              <p className="mt-6 max-w-[620px] text-[13px] leading-[2] text-white/65 md:text-[14px]">
+              <p className="mt-6 max-w-[650px] text-[12px] leading-[1.9] text-white/70 sm:text-[13px] sm:leading-[2]">
                 From finding the right purohit and arranging sacred
                 ceremonies to travel, accommodation and on-ground
                 assistance — Tirthvaani brings your entire pilgrimage
@@ -222,44 +275,87 @@ export function WhyChooseUs() {
 
               {/* Service highlights */}
               <div className="mt-8 flex flex-wrap gap-x-7 gap-y-4">
-                {[
-                  "Ritual arrangements",
-                  "Trusted purohits",
-                  "Travel assistance",
-                  "Accommodation",
-                ].map((item) => (
-                  <div
+                {highlights.map((item, index) => (
+                  <motion.div
                     key={item}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.2 + index * 0.08,
+                    }}
                     className="flex items-center gap-2"
                   >
                     <Check
                       size={13}
                       strokeWidth={1.8}
-                      className="text-[#D9BD8D]"
+                      className="text-[#E5A080]"
                     />
-                    <span className="text-[10px] tracking-wide text-white/75">
+                    <span className="text-[10px] tracking-wide text-white/80">
                       {item}
                     </span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
 
             {/* Decorative emblem */}
-            <div className="relative hidden h-36 w-36 shrink-0 items-center justify-center lg:flex">
-              <div className="absolute inset-0 rounded-full border border-[#D9BD8D]/30" />
-              <div className="absolute inset-3 rounded-full border border-[#D9BD8D]/20" />
-              <div className="absolute inset-6 rounded-full border border-[#D9BD8D]/20" />
-              <Compass
-                size={46}
-                strokeWidth={0.8}
-                className="text-[#D9BD8D]"
+            <div className="relative mx-auto hidden h-40 w-40 shrink-0 items-center justify-center lg:flex">
+              <motion.div
+                animate={
+                  reduceMotion ? undefined : { rotate: 360 }
+                }
+                transition={{
+                  duration: 50,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className="absolute inset-0 rounded-full border border-dashed border-[#FFF8EF]/30"
               />
-            </div>
 
+              <div className="absolute inset-3 rounded-full border border-[#FFF8EF]/20" />
+              <div className="absolute inset-7 rounded-full border border-[#FFF8EF]/15" />
+
+              <motion.div
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : { rotate: [0, 5, 0, -5, 0] }
+                }
+                transition={{
+                  duration: 10,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <Compass
+                  size={48}
+                  strokeWidth={0.8}
+                  className="text-[#E5A080]"
+                />
+              </motion.div>
+
+              <div className="absolute right-1 top-5 h-2 w-2 rounded-full bg-[#E5A080]" />
+              <div className="absolute bottom-5 left-1 h-1.5 w-1.5 rounded-full bg-[#E5A080]/70" />
+            </div>
+          </div>
+
+          {/* Bottom decorative line */}
+          <div className="relative mt-10 h-px w-full bg-white/15">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1.2,
+                delay: 0.3,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="h-px w-full origin-left bg-[#E5A080]/70"
+            />
           </div>
         </motion.div>
-
       </div>
     </section>
   );

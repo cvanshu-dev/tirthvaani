@@ -162,6 +162,7 @@ function FluidImageReveal({ src }: { src: string }) {
     };
 
     function render(time: number) {
+      if (!ctx || !maskCtx || !imageCtx) return;
       frame = 0;
       if (disposed || !imageReady) return;
 
@@ -459,7 +460,7 @@ function FloatingParticles() {
 
 export function HeroSection() {
   return (
-    <section className="relative isolate h-[940px] min-h-[850px] w-full overflow-hidden bg-[#fff7ee] text-[#351e18] lg:h-[100svh] lg:min-h-[900px]">
+    <section className="relative isolate h-[940px] min-h-[850px] w-full overflow-hidden bg-[#FBF8F1] text-[#354B3B] lg:h-[100svh] lg:min-h-[900px]">
 
       {/* Background */}
       <div className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_76%_46%,rgba(255,217,166,0.35),transparent_47%),radial-gradient(ellipse_at_12%_60%,#fffdf9,transparent_52%),linear-gradient(110deg,#fff9f2,#fdf0e3)]" />
@@ -503,123 +504,103 @@ export function HeroSection() {
           MAIN CONTENT
       ===================================== */}
 
-      <div className="absolute left-[6%] top-[14.5%] z-[5] w-[560px] max-w-[44%] max-lg:left-[5%] max-lg:top-[13%] max-lg:max-w-[49%] max-md:relative max-md:left-auto max-md:top-auto max-md:w-full max-md:max-w-none max-md:px-[6%] max-md:pb-[390px] max-md:pt-[105px]">
+   
+      {/* =====================================
+          MAIN CONTENT — REFINED EDITORIAL DESIGN
+      ===================================== */}
 
-      
-{/* =====================================
-    SACRED JOURNEY — EDITORIAL CONTENT
-===================================== */}
+      {/* =====================================
+          MAIN CONTENT — SACRED JOURNEY
+      ===================================== */}
 
+<div className="absolute left-[6%] top-[13.5%] z-[5] w-[680px] max-w-[52%] max-lg:left-[5%] max-lg:top-[13%] max-lg:max-w-[54%] max-md:relative max-md:left-auto max-md:top-auto max-md:w-full max-md:max-w-none max-md:px-[6%] max-md:pb-[390px] max-md:pt-[105px]">
+  <div className="relative z-[6] w-full max-w-[680px]">
 
-{/* =====================================
-    SACRED JOURNEY — EDITORIAL CONTENT
-===================================== */}
+          {/* Eyebrow */}
+       
 
-<div className="relative z-[6] max-w-[590px]">
+          {/* Heading */}
+         <h2 className="flex flex-col items-start gap-[9px] font-serif text-[clamp(46px,5.1vw,70px)] font-medium leading-[1.12] tracking-[-2.4px] text-[#354B3B]">
+  <span>Honour your</span>
 
-  {/* Eyebrow */}
-  <div className="mb-7 flex items-center gap-4">
-    <span className="h-px w-10 bg-[#b18a55]" />
-    <span className="font-sans text-[10px] font-semibold uppercase tracking-[3px] text-[#92734d]">
-      A Journey Rooted in Tradition
+  <span className="italic">
+    roots.
+  </span>
+
+  <span className="mt-1 text-[#B65F38]">
+    Follow the
+  </span>
+
+  <span className="text-[#B65F38]">
+    sacred path.
+  </span>
+</h2>
+
+          {/* Decorative separator */}
+       
+
+          {/* Description */}
+<p className="mt-8 max-w-[590px] font-sans text-[14px] leading-[1.95] tracking-[0.01em] text-[#667467] md:mt-9 md:text-[16px] md:leading-[2]">
+  Discover sacred destinations, arrange rituals rooted in your
+  family&apos;s traditions, and connect with experienced Purohits.
+  From the first consultation to the final ritual, every step
+  is thoughtfully guided with care.
+</p>
+
+          {/* CTA and brand promise */}
+        <div className="mt-14 flex flex-wrap items-center gap-x-7 gap-y-5 md:mt-16">
+
+  <Link
+    href="/destinations"
+    className="group relative inline-flex min-h-[58px] items-center gap-8 overflow-hidden rounded-[4px] border border-[#A95130] bg-[#B65F38] px-8 text-[11px] font-semibold uppercase tracking-[1.5px] !text-[#FFF8EF] shadow-[0_8px_24px_rgba(182,95,56,0.2)] transition-all duration-500 hover:-translate-y-1 hover:border-[#934628] hover:bg-[#A95130] hover:shadow-[0_14px_30px_rgba(169,81,48,0.25)]"
+  >
+    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
+    <span className="relative !text-[#FFF8EF]">
+      Explore Sacred Destinations
     </span>
-    <span className="h-px w-10 bg-[#b18a55]/50" />
-  </div>
 
-  {/* Heading */}
-  <h2 className="font-serif text-[clamp(43px,5vw,68px)] font-medium leading-[1.06] tracking-[-2.5px] text-[#493629]">
-    Every family has
-    <br />
-    a sacred path.
-    <br />
-    <span className="relative inline-block italic text-[#a77b43]">
-      Find yours.
-      <span className="absolute -bottom-2 left-0 h-[1px] w-[75%] bg-[#b18a55]/70" />
+    <span className="relative flex h-7 w-7 items-center justify-center rounded-full border border-white/30 text-[17px] !text-white transition-all duration-300 group-hover:rotate-45 group-hover:bg-white/15">
+      ↗
     </span>
-  </h2>
-
-  {/* Decorative separator */}
-  <div className="my-8 flex items-center gap-3">
-    <span className="h-[5px] w-[5px] rotate-45 bg-[#b18a55]" />
-    <span className="h-px w-16 bg-gradient-to-r from-[#b18a55] to-transparent" />
-  </div>
-
-  {/* Description */}
-  <p className="max-w-[470px] font-serif text-[16px] leading-[1.9] text-[#74604e] md:text-[17px]">
-    Discover sacred destinations, understand the rituals that honour
-    your traditions, and find experienced Pandits to guide your
-    family's spiritual journey.
-  </p>
-
-  {/* CTA and brand promise */}
-  <div className="mt-9 flex flex-wrap items-center gap-7">
-
-    <Link
-      href="/destinations"
-      className="group relative flex min-h-[56px] items-center gap-7 overflow-hidden border border-[#a88a60] bg-[#826746] px-7 text-[10px] font-bold uppercase tracking-[1.8px] text-[#fffaf0] shadow-[0_7px_20px_rgba(91,68,42,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-[#70563a] hover:bg-[#70563a] hover:shadow-[0_12px_26px_rgba(91,68,42,0.18)]"
-    >
-      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-
-      <span className="relative">
-        Explore Sacred Journeys
-      </span>
-
-      <span className="relative text-[18px] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-        ↗
-      </span>
-    </Link>
-
-    {/* Brand promise */}
-    <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#b18a55]/50 bg-[#f7eddf]">
-        <span className="font-serif text-[19px] text-[#92734d]">
-          ॐ
-        </span>
-      </div>
-
-      <div>
-        <p className="font-sans text-[9px] font-bold uppercase tracking-[1.7px] text-[#594534]">
-          Rooted in tradition
-        </p>
-        <p className="mt-1 font-serif text-[13px] italic text-[#92734d]">
-          Guided with care
-        </p>
-      </div>
-    </div>
-
-  </div>
+  </Link>
 
 </div>
-
+        </div>
 
         {/* Pagination */}
-        <div className="absolute left-0 top-[725px] flex items-center gap-[9px] max-md:bottom-[350px] max-md:top-auto max-sm:bottom-[305px]">
-          <span className="h-[3px] w-8 bg-[#a50919]" />
-          <span className="h-[3px] w-[30px] bg-[#f0d0a7]" />
-          <span className="h-[3px] w-[30px] bg-[#f0d0a7]" />
-        </div>
+      
+
       </div>
+
+
 
       {/* =====================================
           BOTTOM TRUST HIGHLIGHTS
       ===================================== */}
 
-      <div className="absolute bottom-[22px] left-1/2 z-[10] grid w-[min(1120px,88%)] -translate-x-1/2 grid-cols-4 items-center rounded-[3px] border border-[#d8b77f]/45 bg-[#fffaf3]/80 px-5 py-[17px] shadow-[0_8px_30px_rgba(91,48,25,0.06)] backdrop-blur-md max-md:bottom-[14px] max-md:w-[90%] max-md:grid-cols-2 max-md:gap-y-3 max-md:px-3 max-md:py-3">
+    
+      {/* =====================================
+          BOTTOM TRUST HIGHLIGHTS
+      ===================================== */}
+
+      <div className="absolute bottom-[22px] left-1/2 z-[10] grid w-[min(1120px,88%)] -translate-x-1/2 grid-cols-4 items-center border border-[#819078]/30 bg-[#FBF8F1]/90 px-5 py-[17px] shadow-[0_8px_30px_rgba(53,75,59,0.07)] backdrop-blur-xl max-md:bottom-[14px] max-md:w-[90%] max-md:grid-cols-2 max-md:gap-y-3 max-md:px-3 max-md:py-3">
+
         {[
           "Gotra-specific Purohit",
-          "No Hidden Charges",
+          "Transparent Pricing",
           "End-to-End Support",
-          "Special Monitoring",
+          "Dedicated Ritual Monitoring",
         ].map((item, index) => (
           <div
             key={item}
-            className={`flex min-w-0 items-center justify-center gap-3 px-3 font-sans text-[10px] font-bold uppercase tracking-[1.25px] text-[#56372a] max-md:justify-start max-md:px-2 max-md:text-[9px] max-md:tracking-[0.7px] ${
+            className={`flex min-w-0 items-center justify-center gap-3 px-3 font-sans text-[10px] font-semibold uppercase tracking-[1px] text-[#354B3B] max-md:justify-start max-md:px-2 max-md:text-[9px] max-md:tracking-[0.5px] ${
               index !== 0
-                ? "border-l border-[#cda66b]/45 max-md:border-l-0"
+                ? "border-l border-[#819078]/35 max-md:border-l-0"
                 : ""
             }`}
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#c99645]/55 text-[13px] text-[#a50919] max-md:h-6 max-md:w-6">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#B65F38]/35 bg-[#F6EDE3] font-serif text-[13px] text-[#B65F38] max-md:h-6 max-md:w-6">
               {index === 0
                 ? "ॐ"
                 : index === 1
@@ -628,10 +609,15 @@ export function HeroSection() {
                     ? "↗"
                     : "✦"}
             </span>
-            <span className="leading-[1.4]">{item}</span>
+
+            <span className="leading-[1.4]">
+              {item}
+            </span>
           </div>
         ))}
+
       </div>
+
 
       {/* Bottom atmospheric glow */}
       <div className="pointer-events-none absolute bottom-[-180px] left-[25%] z-[2] h-[250px] w-[65%] bg-[radial-gradient(ellipse,rgba(255,211,161,0.32),transparent_70%)] blur-[30px]" />

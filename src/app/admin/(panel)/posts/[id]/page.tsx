@@ -83,6 +83,7 @@ export default async function EditPostPage({
     id: post.id,
     title: post.title,
     slug: post.slug,
+template: "STANDARD" as const,
     excerpt: post.excerpt,
     body,
     status: post.status,

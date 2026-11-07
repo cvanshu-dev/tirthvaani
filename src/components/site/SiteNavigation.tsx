@@ -1,16 +1,14 @@
 import { Navigation, type NavigationLink } from "@/components/site";
 
+
+
 const navigationItems: NavigationLink[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  {
-    label: "Rituals",
-    href: "/services",
-    children: [
-      { label: "Pitru Karyas", href: "/pitru-rituals" },
-      { label: "Dev Karyas", href: "/dev-rituals" },
-    ],
-  },
+
+  { label: "Pitru Karyas", href: "/pitru-rituals" },
+  { label: "Dev Karyas", href: "/dev-rituals" },
+  
 
   { label: "Journal", href: "/journal" },
   { label: "Contact", href: "/contact" },

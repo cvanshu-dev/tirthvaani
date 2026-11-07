@@ -1,280 +1,417 @@
-
 "use client";
-
+import Link from "next/link";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "framer-motion";
+import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
 
-const destinations = [
+type Destination = {
+  id: string;
+  name: string;
+  sanskrit: string;
+  subtitle: string;
+  description: string;
+  ritual: string;
+  image: string;
+  symbol: string;
+  mythology: string;
+};
+
+const destinations: Destination[] = [
   {
-    number: "01",
+    id: "varanasi",
     name: "Varanasi",
-    region: "Uttar Pradesh, India",
+    sanskrit: "काशी",
+    subtitle: "",
     description:
-      "Where the sacred Ganga flows through centuries of faith, devotion and timeless traditions.",
+      "In Kashi, Shiva is revered as the eternal presence beyond birth and death. Along the Ganga, ancient traditions of worship, remembrance and liberation continue to shape the spiritual life of the city.",
+    ritual: "Kashi Darshan · Ganga Aarti · Pind Daan",
     image: "/varanasi.jpg",
-    className: "lg:col-span-7 lg:row-span-2",
-    featured: true,
-    imagePosition: "center 55%",
+    symbol: "01",
+    mythology: "",
   },
   {
-    number: "02",
+    id: "prayagraj",
     name: "Prayagraj",
-    region: "Uttar Pradesh, India",
-    description: "The sacred confluence of three holy rivers.",
+    sanskrit: "प्रयागराज",
+    subtitle: "",
+    description:
+      "The Triveni Sangam is revered as the meeting point of the Ganga, Yamuna and the traditionally invisible Saraswati. A confluence associated with sacred bathing, prayer and ancestral offerings.",
+    ritual: "Triveni Snan · Tarpan · Pind Daan",
     image: "/prayagraj.jpg",
-    className: "lg:col-span-5",
-    imagePosition: "center 50%",
+    symbol: "02",
+    mythology: "",
   },
   {
-    number: "03",
+    id: "gaya",
     name: "Gaya",
-    region: "Bihar, India",
-    description: "A timeless land of ancestral rituals and devotion.",
+    sanskrit: "गया",
+    subtitle: "",
+    description:
+      "At the sacred Vishnupad Temple, tradition associates the footprints of Lord Vishnu with the spiritual significance of Gaya. Families travel here to perform ancestral rites and offer prayers.",
+    ritual: "Pind Daan · Shraddha · Tarpan",
     image: "/gaya.jpg",
-    className: "lg:col-span-5",
-    imagePosition: "center 50%",
+    symbol: "03",
+    mythology: "",
   },
   {
-    number: "04",
+    id: "rameswaram",
     name: "Rameswaram",
-    region: "Tamil Nadu, India",
-    description: "An island of sacred traditions and divine heritage.",
+    sanskrit: "रामेश्वरम्",
+    subtitle: "",
+    description:
+      "Deeply connected with the Ramayana tradition, Rameswaram represents the devotion of Lord Rama to Lord Shiva. Its sacred waters and ancient corridors make it one of India's most revered pilgrimage destinations.",
+    ritual: "Teerth Snanam · Jyotirlinga Darshan",
     image: "/rameswaram.jpg",
-    className: "lg:col-span-3",
-    imagePosition: "center 50%",
+    symbol: "04",
+    mythology: "",
   },
   {
-    number: "05",
+    id: "haridwar",
     name: "Haridwar",
-    region: "Uttarakhand, India",
-    description: "Where the holy Ganga descends into the plains.",
+    sanskrit: "हरिद्वार",
+    subtitle: "",
+    description:
+      "The story of Bhagiratha and the descent of Ganga gives this sacred city a profound place in Hindu tradition. At Har Ki Pauri, devotion meets the flowing river in an enduring daily ritual.",
+    ritual: "Ganga Snan · Ganga Aarti · Tarpan",
     image: "/haridwar.jpg",
-    className: "lg:col-span-3",
-    imagePosition: "center 50%",
+    symbol: "05",
+    mythology: "",
   },
   {
-    number: "06",
+    id: "narmada",
     name: "Narmada",
-    region: "Central India",
-    description: "A sacred river revered through generations.",
+    sanskrit: "नर्मदा",
+    subtitle: "",
+    description:
+      "The Narmada is worshipped as a sacred river and goddess. Its Parikrama is a remarkable pilgrimage tradition, undertaken as an expression of discipline, faith and devotion.",
+    ritual: "Narmada Snan · Narmada Parikrama",
     image: "/narmada.jpg",
-    className: "lg:col-span-3",
-    imagePosition: "center 50%",
+    symbol: "06",
+    mythology: "",
   },
   {
-    number: "07",
+    id: "ujjain",
     name: "Ujjain",
-    region: "Madhya Pradesh, India",
-    description: "An ancient spiritual city devoted to Mahakaleshwar.",
+    sanskrit: "उज्जयिनी",
+    subtitle: "",
+    description:
+      "Ujjain is home to Mahakaleshwar, one of the twelve Jyotirlingas. Here, Lord Shiva is worshipped as Mahakaal — the divine beyond the boundaries of time.",
+    ritual: "Mahakaleshwar Darshan · Bhasma Aarti",
     image: "/ujjain.jpg",
-    className: "lg:col-span-3",
-    imagePosition: "center 50%",
+    symbol: "07",
+    mythology: "",
   },
 ];
 
-export function Destinations() {
+const ease = [0.22, 1, 0.36, 1] as const;
+
+function DestinationVisual({
+  destination,
+  reducedMotion,
+  index,
+}: {
+  destination: Destination;
+  reducedMotion: boolean;
+  index: number;
+}) {
   return (
-    <section className="relative overflow-hidden bg-[#F8F6F0] py-24 md:py-32">
+    <div className="relative h-[340px] overflow-hidden rounded-[4px_76px_4px_4px] bg-[#354B3B] shadow-[0_24px_65px_rgba(53,75,59,0.13)] sm:h-[420px] md:h-[min(62vh,540px)] md:min-h-[390px]">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={destination.id}
+          initial={
+            reducedMotion ? false : { opacity: 0, scale: 1.035 }
+          }
+          animate={{ opacity: 1, scale: 1 }}
+          exit={
+            reducedMotion
+              ? undefined
+              : { opacity: 0, scale: 1.015 }
+          }
+          transition={{
+            duration: reducedMotion ? 0 : 0.7,
+            ease,
+          }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={destination.image}
+            alt={`${destination.name} sacred destination`}
+            fill
+            priority={index === 0}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
 
-      {/* Background details */}
-      <div className="pointer-events-none absolute -right-52 top-20 h-[600px] w-[600px] rounded-full border border-[#B58B4B]/[0.08]" />
-      <div className="pointer-events-none absolute -right-36 top-36 h-[420px] w-[420px] rounded-full border border-[#B58B4B]/[0.08]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18271E]/80 via-[#18271E]/15 to-transparent" />
 
-      <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 lg:px-16">
+  <div className="absolute right-6 top-6 md:right-8 md:top-8">
+  <span className="font-serif text-sm text-[#FBF8F1]">
+    {destination.sanskrit}
+  </span>
+</div>
 
-        {/* SECTION HEADER */}
-        <div className="mb-14 grid grid-cols-1 items-end gap-8 md:mb-16 md:grid-cols-2">
+          <div className="absolute bottom-7 left-6 right-6 md:bottom-9 md:left-9 md:right-9">
+           
 
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-px w-9 bg-[#AD8249]" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#A47B40]">
-                Sacred Places of India
-              </span>
-            </div>
+            <h3 className="font-serif text-[clamp(42px,5vw,66px)] leading-none tracking-[-0.04em] text-white">
+              {destination.name}
+            </h3>
 
-            <h2 className="font-serif text-[42px] leading-[1.08] tracking-[-0.035em] text-[#30291F] sm:text-5xl lg:text-[68px]">
-              Places of faith.
+         
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="pointer-events-none absolute inset-3 rounded-[3px_62px_3px_3px] border border-white/20 md:inset-4" />
+
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] bg-[#B65F38]" />
+    </div>
+  );
+}
+
+export function Destinations() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const reducedMotion = useReducedMotion() ?? false;
+
+  // Track only the destination chapters, not the entire two-column layout.
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const nextIndex = Math.min(
+      destinations.length - 1,
+      Math.floor(latest * destinations.length)
+    );
+
+    setActiveIndex((current) =>
+      current === nextIndex ? current : nextIndex
+    );
+  });
+
+  const active = destinations[activeIndex];
+
+  const scrollToDestination = (id: string) => {
+    document.getElementById(`chapter-${id}`)?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
+  };
+
+  return (
+    <section
+      id="destinations"
+      className="relative overflow-clip bg-[#FBF8F1] px-[6%] py-16 text-[#354B3B] md:py-20 lg:py-24"
+    >
+      {/* Background geometry */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-40 top-40 h-[420px] w-[420px] rounded-full border border-[#819078]/15"
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-28 top-52 h-[300px] w-[300px] rounded-full border border-[#819078]/15"
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-52 bottom-0 h-[520px] w-[520px] rounded-full border border-[#819078]/15"
+      />
+
+      <div className="relative mx-auto w-full max-w-[1440px]">
+        {/* Heading */}
+        <div className="mb-10 grid gap-6 md:mb-14 md:grid-cols-[1fr_320px] md:items-end lg:mb-16">
+          <div>
+            
+
+            <h2 className="font-serif text-[clamp(38px,5.2vw,70px)] leading-[1.02] tracking-[-0.045em] text-[#354B3B]">
+              Seven sacred places.
               <br />
-              <span className="font-normal italic text-[#A67B42]">
-                Journeys of the soul.
+              <span className="italic text-[#B65F38]">
+                Seven timeless stories.
               </span>
             </h2>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex flex-col justify-end md:items-end"
-          >
-            <p className="max-w-[390px] text-[14px] leading-[2] text-[#777064] md:text-[15px] md:text-right">
-              Across India's sacred landscapes, every destination
-              holds a story of devotion, a tradition of faith and
-              a connection that transcends generations.
-            </p>
-
-            <div className="mt-6 flex items-center gap-3">
-              <span className="h-px w-8 bg-[#C5A574]" />
-              <span className="text-[9px] uppercase tracking-[0.22em] text-[#A18B6B]">
-                Seven timeless destinations
-              </span>
-            </div>
-          </motion.div>
+       
         </div>
 
-        {/* DESTINATION COLLECTION */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-[270px_270px_310px] lg:gap-5">
+        {/* Decorative signature */}
+       
 
-          {destinations.map((destination, index) => {
-            const featured = destination.featured;
+        {/* Two-column destination layout */}
+        <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[1.02fr_0.98fr] md:gap-12 lg:gap-16 xl:gap-[80px]">
+          {/* Sticky visual */}
+          <div className="self-start md:sticky md:top-24">
+            <DestinationVisual
+              destination={active}
+              reducedMotion={reducedMotion}
+              index={activeIndex}
+            />
 
-            return (
-              <motion.article
-                key={destination.number}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.12 }}
-                transition={{
-                  duration: 0.75,
-                  delay: (index % 4) * 0.07,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className={`group relative min-h-[340px] overflow-hidden bg-[#DCD4C5] ${
-                  featured
-                    ? "sm:col-span-2 lg:min-h-0"
-                    : "lg:min-h-0"
-                } ${destination.className}`}
-              >
+            {/* Progress rail */}
+            <div className="mt-5 flex items-center justify-between gap-4">
+              <div className="flex flex-1 items-center gap-1.5">
+                {destinations.map((destination, index) => (
+                  <div
+                    key={destination.id}
+                    className="h-[3px] flex-1 overflow-hidden rounded-full bg-[#819078]/20"
+                  >
+                    <motion.div
+                      className="h-full origin-left rounded-full bg-[#B65F38]"
+                      animate={{
+                        scaleX: index <= activeIndex ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.4 }}
+                    />
+                  </div>
+                ))}
+              </div>
 
-                {/* IMAGE */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <Image
-                    src={destination.image}
-                    alt={`${destination.name}, ${destination.region}`}
-                    fill
-                    priority={featured}
-                    sizes={
-                      featured
-                        ? "(max-width: 1024px) 100vw, 58vw"
-                        : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 35vw"
-                    }
-                    style={{
-                      objectPosition: destination.imagePosition,
-                    }}
-                    className="object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.055]"
-                  />
-                </div>
+              <span className="min-w-[48px] text-right font-serif text-sm text-[#354B3B]">
+                {String(activeIndex + 1).padStart(2, "0")}
+                <span className="text-[#819078]"> / 07</span>
+              </span>
+            </div>
 
-                {/* IMAGE COLOR GRADING */}
-                <div className="absolute inset-0 bg-[#30271C]/[0.08] mix-blend-multiply" />
+           
+          </div>
 
-                {/* GRADIENT */}
-                <div
-                  className={`absolute inset-0 transition-opacity duration-700 ${
-                    featured
-                      ? "bg-gradient-to-t from-[#17130F]/90 via-[#17130F]/20 to-[#17130F]/10"
-                      : "bg-gradient-to-t from-[#17130F]/85 via-[#17130F]/15 to-[#17130F]/5"
-                  }`}
-                />
+          {/* Destination chapters */}
+          <div
+            ref={trackRef}
+            className="relative min-w-0"
+            aria-label="Seven sacred destinations"
+          >
+            {/* Timeline */}
+            <div className="absolute bottom-10 left-[13px] top-10 w-px bg-[#819078]/25 md:left-[17px]" />
 
-                {/* TOP BORDER FRAME */}
-                <div className="pointer-events-none absolute inset-[10px] border border-white/20 opacity-70 transition-all duration-700 group-hover:inset-[14px] group-hover:border-white/40" />
+            {destinations.map((destination, index) => {
+              const isActive = activeIndex === index;
 
-                {/* TOP INFORMATION */}
-                <div className="absolute left-7 right-7 top-7 flex items-center justify-between md:left-8 md:right-8 md:top-8">
-
-                  <div className="flex items-center gap-3">
-                    <span className="font-serif text-[13px] italic text-white/90">
-                      {destination.number}
-                    </span>
-
-                    <span className="h-px w-7 bg-white/50" />
-                    
-                    <span className="text-[8px] font-medium uppercase tracking-[0.24em] text-white/80">
-                      {featured ? "Featured destination" : "Sacred destination"}
+              return (
+                <motion.article
+                  key={destination.id}
+                  className="relative flex min-h-[330px] flex-col justify-center py-10 pl-11 sm:min-h-[360px] md:min-h-[420px] md:py-12 md:pl-14"
+                  initial={
+                    reducedMotion
+                      ? false
+                      : { opacity: 0.65, y: 20 }
+                  }
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.65,
+                    ease,
+                  }}
+                >
+                  {/* Timeline node */}
+                  <div
+                    className={`absolute left-0 top-1/2 z-10 flex h-[27px] w-[27px] -translate-y-1/2 items-center justify-center rounded-full border transition-all duration-500 md:h-[35px] md:w-[35px] ${
+                      isActive
+                        ? "border-[#B65F38] bg-[#B65F38] text-white shadow-[0_0_0_6px_rgba(182,95,56,0.12)]"
+                        : "border-[#819078]/50 bg-[#FBF8F1] text-[#819078]"
+                    }`}
+                  >
+                    <span className="font-serif text-[9px] md:text-[10px]">
+                      {destination.symbol}
                     </span>
                   </div>
 
-                  <span className="text-[9px] font-medium uppercase tracking-[0.16em] text-white/80">
-                    {destination.region}
-                  </span>
-                </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollToDestination(destination.id)}
+                    id={`chapter-${destination.id}`}
+                    aria-label={`View ${destination.name}`}
+                    aria-current={isActive ? "step" : undefined}
+                    className="group block w-full min-w-0 text-left"
+                  >
+                    {/* Eyebrow */}
+                 
 
-                {/* BOTTOM CONTENT */}
-                <div className="absolute bottom-0 left-0 right-0 p-7 md:p-8">
+                    {/* Title row */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="mb-1 font-serif text-xl text-[#B65F38] md:text-2xl">
+                          {destination.sanskrit}
+                        </p>
 
-                  {featured && (
-                    <div className="mb-4 flex items-center gap-3">
-                      <span className="h-px w-8 bg-[#D8B47A]" />
-                      <span className="text-[9px] uppercase tracking-[0.25em] text-[#E7C995]">
-                        The eternal city
+                        <h3 className="font-serif text-[clamp(30px,3.2vw,44px)] leading-[1.05] tracking-[-0.035em] text-[#354B3B] transition-colors duration-300 group-hover:text-[#B65F38]">
+                          {destination.name}
+                        </h3>
+
+                       
+                      </div>
+
+                      <span
+                        className={`mt-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+                          isActive
+                            ? "border-[#B65F38] bg-[#B65F38]/10 text-[#B65F38]"
+                            : "border-[#819078]/30 text-[#71816D] group-hover:border-[#B65F38] group-hover:text-[#B65F38]"
+                        }`}
+                      >
+                        <ArrowUpRight
+                          size={17}
+                          className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
                       </span>
                     </div>
-                  )}
 
-                  <h3
-                    className={`font-serif leading-[0.98] tracking-[-0.035em] text-white ${
-                      featured
-                        ? "text-[58px] sm:text-7xl lg:text-[88px]"
-                        : "text-[42px] sm:text-[46px] lg:text-[48px]"
-                    }`}
-                  >
-                    {destination.name}
-                  </h3>
-
-                  <div className="mt-4 flex items-end justify-between gap-4">
-
-                    <p
-                      className={`max-w-[350px] text-white/80 ${
-                        featured
-                          ? "text-[13px] leading-[1.9] md:text-[14px]"
-                          : "text-[11px] leading-[1.8] md:text-[12px]"
-                      }`}
-                    >
+                    {/* Description */}
+                    <p className="mt-4 w-full text-[12px] leading-[1.85] text-[#667467] md:text-[13px]">
                       {destination.description}
                     </p>
 
-                    {featured && (
-                      <span className="hidden font-serif text-[12px] italic tracking-wide text-white/55 sm:block">
-                        India
-                      </span>
-                    )}
-                  </div>
-                </div>
+                    {/* Ritual details */}
+                    <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 text-[9px] font-medium uppercase tracking-[0.12em] text-[#71816D]">
+                      <MapPin size={12} className="shrink-0 text-[#B65F38]" />
+                      <span>{destination.ritual}</span>
+                    </div>
+                  </button>
 
-              </motion.article>
-            );
-          })}
-
+                  {/* Chapter divider */}
+                  <div className="mt-8 h-px w-full bg-[#819078]/20" />
+                </motion.article>
+              );
+            })}
+          </div>
         </div>
 
-        {/* SECTION FOOTER */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-12 flex flex-col justify-between gap-4 border-t border-[#DFD8CB] pt-7 sm:flex-row sm:items-center"
-        >
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-[#AE8142]" />
-            <span className="text-[9px] font-medium uppercase tracking-[0.23em] text-[#898174]">
-              Rooted in faith. Connected through devotion.
-            </span>
+        {/* Closing */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-5 border-t border-[#819078]/25 pt-8 text-center sm:flex-row sm:text-left">
+          <div>
+            <p className="font-serif text-xl text-[#354B3B]">
+              Every journey begins with faith.
+            </p>
+
+            <p className="mt-1 text-[10px] tracking-[0.12em] text-[#819078]">
+              श्रद्धा · सेवा · संस्कार
+            </p>
           </div>
 
-          <span className="font-serif text-sm italic text-[#A18B6B]">
-            Tirthvaani · Sacred journeys
-          </span>
-        </motion.div>
+          <Link
+            href="/destinations"
+            className="group inline-flex items-center gap-3 rounded-full border border-[#A95130] bg-[#B65F38] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#FFF8EF] shadow-[0_8px_20px_rgba(182,95,56,0.12)] transition-all duration-300 hover:border-[#934628] hover:bg-[#A95130]"
+          >
+            Explore all destinations
 
+            <ArrowUpRight
+              size={15}
+              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </Link>
+        </div>
       </div>
     </section>
   );
