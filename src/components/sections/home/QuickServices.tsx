@@ -34,7 +34,7 @@ const services = [
     subtitle: "Honour the roots that made you.",
     description:
       "A sacred offering in remembrance of ancestors. We help arrange experienced purohits, traditional samagri and the ritual details that make the ceremony meaningful.",
-    image: "/pitru-rituals.png",
+    image: "/pitru-rituals.webp",
     href: "/services/pind-daan",
    
   
@@ -45,7 +45,7 @@ const services = [
     subtitle: "A meaningful farewell, guided with care.",
     description:
       "A deeply personal journey to sacred waters. From choosing the right destination to arranging the ceremony, every detail is handled with dignity.",
-    image: "/astiv.png",
+    image: "/astiv.webp",
     href: "/services/asthi-visarjan",
 
   },
@@ -55,7 +55,7 @@ const services = [
     subtitle: "An offering in devotion to Mahadev.",
     description:
       "Perform the sacred abhishek of Lord Shiva with traditional offerings, knowledgeable purohits and guidance through each step of the puja.",
-    image: "/Rudrabhishek.png",
+    image: "/Rudrabhishek.webp",
     href: "/services/rudra-abhishek",
 
   },
@@ -65,7 +65,7 @@ const services = [
     subtitle: "Let generosity become your offering.",
     description:
       "An act of giving rooted in compassion. We help coordinate food offerings and arrangements so your daan can be performed with care and purpose.",
-    image: "/anna.png",
+    image: "/anna.webp",
     href: "/services/anna-daan",
    
   },

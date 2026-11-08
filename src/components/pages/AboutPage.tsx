@@ -14,7 +14,7 @@ import {
   {
     title: "Lord Shiva & Kashi",
     text: "Kashi is known to be the favorite place of Lord Shiva. It is believed that those who visit Kashi and take a holy dip in the River Ganges attain liberation.",
-    image: "/about.jpg",
+    image: "/about.webp",
   },
   {
     title: "About Kashi",
@@ -97,7 +97,7 @@ export function About() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
           <div className="relative h-[430px] overflow-hidden rounded-[30px_140px_30px_30px] shadow-2xl md:h-[600px]">
             <Image
-              src="/about.jpg"
+              src="/about.webp"
               alt="Sacred ghats of Varanasi beside the River Ganga"
               fill
               priority

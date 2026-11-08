@@ -1,468 +1,8 @@
-
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Flower2 } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
-
-const ease = [0.22, 1, 0.36, 1] as const;
-
-/* =========================================================
-   SAPTA JIHVA — SEVEN TONGUES OF AGNI
-========================================================= */
-
-const sacredFlames = [
-  { x: 72, scale: 0.68, angle: -12, delay: 0.1 },
-  { x: 138, scale: 0.82, angle: -8, delay: 0.45 },
-  { x: 204, scale: 0.94, angle: -4, delay: 0.2 },
-  { x: 270, scale: 1.3, angle: 0, delay: 0.65 },
-  { x: 336, scale: 0.94, angle: 4, delay: 0.3 },
-  { x: 402, scale: 0.82, angle: 8, delay: 0.55 },
-  { x: 468, scale: 0.68, angle: 12, delay: 0.15 },
-];
-
-function AgniFlame({
-  x,
-  scale,
-  angle,
-  delay,
-  reduced,
-}: {
-  x: number;
-  scale: number;
-  angle: number;
-  delay: number;
-  reduced: boolean;
-}) {
-  return (
-    <motion.g
-      transform={`translate(${x} 250) scale(${scale}) rotate(${angle})`}
-      animate={
-        reduced
-          ? undefined
-          : {
-              scale: [scale, scale * 1.035, scale],
-              y: [250, 245, 250],
-            }
-      }
-      transition={{
-        duration: 2.8 + delay,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-      style={{ transformOrigin: `${x}px 250px` }}
-    >
-      {/* Outer golden flame */}
-      <path
-        d="
-          M0 0
-          C-12 -20 -39 -45 -30 -91
-          C-26 -116 -10 -136 3 -162
-          C3 -135 25 -126 30 -101
-          C41 -62 22 -25 0 0Z
-        "
-        fill="url(#agniOuter)"
-        stroke="#A76B34"
-        strokeWidth="1.1"
-        strokeOpacity=".65"
-      />
-
-      {/* Inner flame */}
-      <path
-        d="
-          M0 -4
-          C-8 -24 -20 -45 -13 -72
-          C-9 -87 -2 -99 4 -113
-          C8 -91 20 -78 18 -57
-          C17 -34 9 -16 0 -4Z
-        "
-        fill="url(#agniInner)"
-        opacity=".88"
-      />
-
-      {/* Bright flame heart */}
-      <path
-        d="
-          M0 -8
-          C-7 -25 -7 -41 1 -59
-          C12 -43 14 -24 0 -8Z
-        "
-        fill="#FFF0C4"
-        fillOpacity=".82"
-      />
-
-      {/* Flame detailing */}
-      <path
-        d="M0 -20 Q-15 -55 2 -93"
-        stroke="#FFF0C4"
-        strokeOpacity=".5"
-        strokeWidth="1"
-        fill="none"
-      />
-
-      {/* Base glow */}
-      <ellipse
-        cx="0"
-        cy="-2"
-        rx="17"
-        ry="3"
-        fill="#E5B76E"
-        fillOpacity=".3"
-      />
-    </motion.g>
-  );
-}
-
-function SaptaJihva({ reduced }: { reduced: boolean }) {
-  const embers = [
-    { x: 85, y: 82, delay: 0 },
-    { x: 150, y: 48, delay: 0.7 },
-    { x: 220, y: 24, delay: 1.4 },
-    { x: 320, y: 33, delay: 0.4 },
-    { x: 390, y: 55, delay: 1.1 },
-    { x: 455, y: 94, delay: 0.8 },
-    { x: 180, y: 155, delay: 1.6 },
-    { x: 360, y: 145, delay: 0.3 },
-  ];
-
-  return (
-    <div className="sapta-jihva">
-      {/* Ambient aura */}
-      <motion.div
-        className="agni-aura"
-        animate={
-          reduced
-            ? undefined
-            : {
-                opacity: [0.45, 0.8, 0.45],
-                scale: [0.95, 1.04, 0.95],
-              }
-        }
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Outer rotating engraved ring */}
-      <motion.svg
-        viewBox="0 0 600 600"
-        className="agni-ring agni-ring-outer"
-        aria-hidden="true"
-        animate={reduced ? undefined : { rotate: 360 }}
-        transition={{
-          duration: 150,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <circle
-          cx="300"
-          cy="300"
-          r="275"
-          stroke="#B9894E"
-          strokeOpacity=".42"
-          strokeWidth="1"
-          fill="none"
-        />
-
-        <circle
-          cx="300"
-          cy="300"
-          r="258"
-          stroke="#B9894E"
-          strokeOpacity=".3"
-          strokeWidth=".8"
-          strokeDasharray="2 8"
-          fill="none"
-        />
-
-        <circle
-          cx="300"
-          cy="300"
-          r="235"
-          stroke="#B9894E"
-          strokeOpacity=".25"
-          strokeWidth="1"
-          fill="none"
-        />
-
-        {Array.from({ length: 48 }, (_, i) => (
-          <g
-            key={i}
-            transform={`rotate(${i * 7.5} 300 300)`}
-          >
-            <path
-              d="M300 25 L300 43"
-              stroke="#B9894E"
-              strokeOpacity={i % 4 === 0 ? ".8" : ".4"}
-              strokeWidth={i % 4 === 0 ? "1.4" : ".7"}
-            />
-
-            {i % 2 === 0 && (
-              <circle
-                cx="300"
-                cy="51"
-                r="1.8"
-                fill="#B9894E"
-                fillOpacity=".6"
-              />
-            )}
-          </g>
-        ))}
-
-        {/* Directional ornaments */}
-        {[0, 45, 90, 135].map((angle) => (
-          <g
-            key={angle}
-            transform={`rotate(${angle} 300 300)`}
-          >
-            <path
-              d="M300 65 L292 81 L300 96 L308 81 Z"
-              stroke="#B9894E"
-              strokeOpacity=".65"
-              fill="#D6AE73"
-              fillOpacity=".06"
-            />
-          </g>
-        ))}
-      </motion.svg>
-
-      {/* Inner rotating rings */}
-      <motion.svg
-        viewBox="0 0 600 600"
-        className="agni-ring agni-ring-inner"
-        aria-hidden="true"
-        animate={reduced ? undefined : { rotate: -360 }}
-        transition={{
-          duration: 190,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <circle
-          cx="300"
-          cy="300"
-          r="205"
-          stroke="#BA8A4E"
-          strokeOpacity=".32"
-          strokeWidth="1"
-          fill="none"
-        />
-
-        <circle
-          cx="300"
-          cy="300"
-          r="190"
-          stroke="#BA8A4E"
-          strokeOpacity=".35"
-          strokeWidth="1"
-          strokeDasharray="3 7"
-          fill="none"
-        />
-
-        <circle
-          cx="300"
-          cy="300"
-          r="172"
-          stroke="#BA8A4E"
-          strokeOpacity=".2"
-          strokeWidth="1"
-          fill="none"
-        />
-
-        {Array.from({ length: 16 }, (_, i) => (
-          <g
-            key={i}
-            transform={`rotate(${i * 22.5} 300 300)`}
-          >
-            <path
-              d="M300 95 L300 120"
-              stroke="#B9894E"
-              strokeOpacity=".65"
-              strokeWidth="1"
-            />
-            <path
-              d="M300 132 L294 143 L300 154 L306 143 Z"
-              stroke="#B9894E"
-              strokeOpacity=".5"
-              fill="#D6AE73"
-              fillOpacity=".08"
-            />
-          </g>
-        ))}
-      </motion.svg>
-
-      {/* Seven sacred flames */}
-      <svg
-        viewBox="0 0 540 300"
-        className="agni-flames"
-        fill="none"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient
-            id="agniOuter"
-            x1="0"
-            y1="-160"
-            x2="0"
-            y2="0"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#F8DDA0" />
-            <stop offset=".38" stopColor="#D9A65B" />
-            <stop offset=".76" stopColor="#BD6D35" />
-            <stop offset="1" stopColor="#9B472C" />
-          </linearGradient>
-
-          <linearGradient
-            id="agniInner"
-            x1="0"
-            y1="-110"
-            x2="0"
-            y2="0"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="#FFF3D1" />
-            <stop offset=".48" stopColor="#F4C77E" />
-            <stop offset="1" stopColor="#E18C43" />
-          </linearGradient>
-
-          <radialGradient id="agniFloor">
-            <stop stopColor="#D89C4E" stopOpacity=".35" />
-            <stop offset="1" stopColor="#D89C4E" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* Fire bed */}
-        <ellipse
-          cx="270"
-          cy="247"
-          rx="235"
-          ry="38"
-          fill="url(#agniFloor)"
-        />
-
-        {/* Seven individually animated tongues */}
-        {sacredFlames.map((flame, index) => (
-          <AgniFlame
-            key={index}
-            {...flame}
-            reduced={reduced}
-          />
-        ))}
-
-        {/* Decorative fire base */}
-        <path
-          d="M52 258 Q160 270 270 258 Q380 270 488 258"
-          stroke="#B9894E"
-          strokeOpacity=".5"
-          strokeWidth="1"
-        />
-
-        <path
-          d="M105 269 Q270 286 435 269"
-          stroke="#B9894E"
-          strokeOpacity=".3"
-          strokeWidth=".8"
-        />
-
-        {/* Embers */}
-        {embers.map((ember, i) => (
-          <motion.circle
-            key={i}
-            cx={ember.x}
-            cy={ember.y}
-            r={i % 3 === 0 ? 2.2 : 1.3}
-            fill="#D59A51"
-            animate={
-              reduced
-                ? undefined
-                : {
-                    opacity: [0.15, 0.9, 0.15],
-                    y: [0, -12, -22],
-                    scale: [0.7, 1.2, 0.6],
-                  }
-            }
-            transition={{
-              duration: 3 + ember.delay,
-              delay: ember.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </svg>
-
-      {/* Small orbiting light points */}
-      <motion.div
-        className="agni-orbit"
-        animate={reduced ? undefined : { rotate: 360 }}
-        transition={{
-          duration: 38,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <span />
-        <span />
-        <span />
-        <span />
-      </motion.div>
-
-      {/* Subtle halo */}
-      <div className="agni-halo" />
-    </div>
-  );
-}
-
-/* =========================================================
-   FLOATING PARTICLES
-========================================================= */
-
-function FloatingParticles({ reduced }: { reduced: boolean }) {
-  const particles = [
-    { x: "12%", y: "20%", delay: 0 },
-    { x: "84%", y: "15%", delay: 1.2 },
-    { x: "92%", y: "72%", delay: 2.1 },
-    { x: "7%", y: "76%", delay: 0.8 },
-    { x: "48%", y: "8%", delay: 1.7 },
-    { x: "55%", y: "90%", delay: 2.8 },
-  ];
-
-  return (
-    <div className="ritual-particles" aria-hidden="true">
-      {particles.map((particle, index) => (
-        <motion.span
-          key={index}
-          className="ritual-particle"
-          style={{
-            left: particle.x,
-            top: particle.y,
-          }}
-          animate={
-            reduced
-              ? undefined
-              : {
-                  y: [0, -12, 0],
-                  opacity: [0.2, 0.7, 0.2],
-                  scale: [0.8, 1.2, 0.8],
-                }
-          }
-          transition={{
-            duration: 5 + index * 0.6,
-            delay: particle.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import { ArrowUpRight } from "lucide-react";
 
 /* =========================================================
    SERVICE IMAGE
@@ -502,80 +42,24 @@ function ServiceImage({
   );
 }
 
-/* =========================================================
-   MAIN RITUAL SERVICES SECTION
-========================================================= */
-
 export function RitualServices() {
-  const reduced = useReducedMotion() ?? false;
-
   return (
     <section
       className="ritual-showcase"
       aria-label="Pandit and Purohit Services"
     >
-      {/* Ambient background */}
-      <div className="ritual-showcase-decoration ritual-decoration-top" />
-      <div className="ritual-showcase-decoration ritual-decoration-bottom" />
-
-      <div className="ritual-showcase-leaf ritual-leaf-left" />
-      <div className="ritual-showcase-leaf ritual-leaf-right" />
-
-      <FloatingParticles reduced={reduced} />
-
       <div className="ritual-layout-shell">
-
-        {/* SECTION HEADING */}
-        <motion.header
-          className="ritual-layout-heading"
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.8, ease }}
-        >
-          {/* SAPTA JIHVA ARTWORK */}
-          <div className="ritual-heading-emblem">
-            <SaptaJihva reduced={reduced} />
-          </div>
-
-
+        <header className="ritual-layout-heading">
           <h2>
             <span>Best Pandit &amp; Purohit</span>
             <em>Services</em>
           </h2>
-
           <p>Varanasi (Kashi) · Gaya · Prayagraj</p>
-        </motion.header>
+        </header>
 
-        {/* SERVICE CARDS */}
         <div className="ritual-layout-grid">
-
-          {/* PITRU RITUALS */}
-          <motion.article
-            className="ritual-showcase-card ritual-card-pitru"
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.08 }}
-            transition={{ duration: 0.75, ease }}
-            whileHover={reduced ? undefined : { y: -6 }}
-          >
+          <article className="ritual-showcase-card ritual-card-pitru">
             <div className="ritual-showcase-copy">
-              <motion.div
-                className="ritual-showcase-symbol"
-                whileHover={
-                  reduced ? undefined : { rotate: 12, scale: 1.08 }
-                }
-                transition={{ duration: 0.45 }}
-              >
-                <Flower2 size={43} strokeWidth={1.15} />
-              </motion.div>
-
-              <div className="ritual-small-divider">
-                <span />
-                <i />
-                <span />
-              </div>
-
               <h3>
                 <span>Pitru</span>
                 <em>Rituals</em>
@@ -593,49 +77,19 @@ export function RitualServices() {
                 <span>Explore Pitru Rituals</span>
                 <ArrowUpRight size={20} strokeWidth={1.6} />
               </Link>
-
-              <div className="ritual-copy-leaf" />
             </div>
-
             <ServiceImage
               href="/pitru-rituals"
-              src="/pitru-rituals.png"
+              src="/pitru-rituals.webp"
               alt="Explore Pitru Rituals"
               caption="ANCESTRAL RITES"
               priority
             />
-          </motion.article>
 
-          {/* DEV RITUALS */}
-          <motion.article
-            className="ritual-showcase-card ritual-card-dev"
-            initial={false}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.08 }}
-            transition={{
-              duration: 0.75,
-              delay: 0.15,
-              ease,
-            }}
-            whileHover={reduced ? undefined : { y: -6 }}
-          >
+          </article>
+
+          <article className="ritual-showcase-card ritual-card-dev">
             <div className="ritual-showcase-copy">
-              <motion.div
-                className="ritual-showcase-symbol"
-                whileHover={
-                  reduced ? undefined : { scale: 1.08 }
-                }
-                transition={{ duration: 0.45 }}
-              >
-                <span className="ritual-om-symbol">ॐ</span>
-              </motion.div>
-
-              <div className="ritual-small-divider">
-                <span />
-                <i />
-                <span />
-              </div>
-
               <h3>
                 <span>Dev</span>
                 <em>Rituals</em>
@@ -653,24 +107,18 @@ export function RitualServices() {
                 <span>Explore Dev Rituals</span>
                 <ArrowUpRight size={20} strokeWidth={1.6} />
               </Link>
-
-              <div className="ritual-copy-leaf" />
             </div>
-
             <ServiceImage
               href="/dev-rituals"
-              src="/dev-rituals.jpg"
+              src="/dev-rituals.webp"
               alt="Explore Dev Rituals"
               caption="DIVINE WORSHIP"
               priority
             />
-          </motion.article>
+
+          </article>
         </div>
       </div>
-
-      {/* =====================================================
-          SECTION STYLES
-      ===================================================== */}
 
       <style jsx>{`
         .ritual-showcase {
@@ -704,7 +152,29 @@ export function RitualServices() {
           width: 100%;
           max-width: 1440px;
           margin: 0 auto;
-          padding: 0 64px;
+          padding: 0 16px;
+        }
+
+        /* Shared horizontal gutters: match the other page sections */
+        @media (min-width: 640px) {
+          .ritual-layout-shell {
+            padding-right: 28px;
+            padding-left: 28px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .ritual-layout-shell {
+            padding-right: 40px;
+            padding-left: 40px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .ritual-layout-shell {
+            padding-right: 64px;
+            padding-left: 64px;
+          }
         }
 
         /* HEADING */
@@ -889,26 +359,6 @@ export function RitualServices() {
           gap: 34px;
         }
 
-        .ritual-showcase-card {
-          position: relative;
-          display: grid;
-          grid-template-columns: 0.88fr 1.12fr;
-          min-height: 380px;
-          overflow: hidden;
-          border: 1px solid rgba(176, 139, 91, 0.22);
-          background: rgba(255, 253, 248, 0.82);
-          box-shadow: 0 15px 45px rgba(72, 58, 36, 0.045);
-
-          transition:
-            border-color 0.5s ease,
-            box-shadow 0.5s ease;
-        }
-
-        .ritual-showcase-card:hover {
-          border-color: rgba(182, 95, 56, 0.38);
-          box-shadow: 0 22px 55px rgba(72, 58, 36, 0.1);
-        }
-
         .ritual-showcase-copy {
           position: relative;
           display: flex;
@@ -917,54 +367,6 @@ export function RitualServices() {
           justify-content: center;
           padding: 36px 25px 36px 32px;
           overflow: hidden;
-        }
-
-        .ritual-showcase-symbol {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 67px;
-          height: 67px;
-          margin-bottom: 22px;
-          color: #a97745;
-          border: 1px solid rgba(188, 146, 91, 0.42);
-          border-radius: 50%;
-          background: rgba(218, 181, 124, 0.09);
-          transition:
-            background 0.4s ease,
-            border-color 0.4s ease;
-        }
-
-        .ritual-showcase-card:hover .ritual-showcase-symbol {
-          background: rgba(218, 181, 124, 0.19);
-          border-color: rgba(188, 146, 91, 0.75);
-        }
-
-        .ritual-om-symbol {
-          font-family: serif;
-          font-size: 39px;
-          line-height: 1;
-          color: #a97745;
-        }
-
-        .ritual-small-divider {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          margin-bottom: 18px;
-        }
-
-        .ritual-small-divider span {
-          width: 23px;
-          height: 1px;
-          background: #c69b65;
-        }
-
-        .ritual-small-divider i {
-          width: 5px;
-          height: 5px;
-          background: #b65f38;
-          transform: rotate(45deg);
         }
 
         .ritual-showcase-copy h3 {
@@ -1004,42 +406,6 @@ export function RitualServices() {
           font-weight: 700;
           letter-spacing: 0.7px;
           text-decoration: none;
-          transition:
-            gap 0.35s ease,
-            color 0.35s ease;
-        }
-
-        .ritual-showcase-button:hover {
-          gap: 20px;
-          color: #843f28;
-        }
-
-        .ritual-showcase-button svg {
-          transition: transform 0.35s ease;
-        }
-
-        .ritual-showcase-button:hover svg {
-          transform: translate(3px, -3px);
-        }
-
-        .ritual-copy-leaf {
-          position: absolute;
-          right: -70px;
-          bottom: -85px;
-          width: 180px;
-          height: 180px;
-          border: 1px solid rgba(188, 146, 91, 0.13);
-          border-radius: 50%;
-          pointer-events: none;
-        }
-
-        .ritual-copy-leaf::before,
-        .ritual-copy-leaf::after {
-          content: "";
-          position: absolute;
-          inset: 15px;
-          border: 1px solid rgba(188, 146, 91, 0.12);
-          border-radius: 50%;
         }
 
         .ritual-copy-leaf::after {
@@ -1060,12 +426,7 @@ export function RitualServices() {
         .ritual-image {
           object-fit: cover;
           z-index: 0;
-          transform: scale(1);
-          transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .ritual-showcase-image:hover .ritual-image {
-          transform: scale(1.055);
+          transform: none;
         }
 
         .ritual-showcase-image-shade {
@@ -1094,216 +455,159 @@ export function RitualServices() {
 
         /* SECTION DECORATION */
 
-        .ritual-showcase-decoration {
-          position: absolute;
-          z-index: 0;
-          width: 420px;
-          height: 420px;
-          border: 1px solid rgba(188, 146, 91, 0.12);
-          border-radius: 50%;
-          pointer-events: none;
-        }
-
-        .ritual-decoration-top {
-          top: -280px;
-          left: -190px;
-        }
-
-        .ritual-decoration-bottom {
-          right: -270px;
-          bottom: -290px;
-          width: 520px;
-          height: 520px;
-        }
-
-        .ritual-showcase-leaf {
-          position: absolute;
-          width: 130px;
-          height: 220px;
-          z-index: 0;
-          opacity: 0.12;
-          pointer-events: none;
-        }
-
-        .ritual-leaf-left {
-          left: -50px;
-          top: 36%;
-          border-left: 1px solid #a98255;
-          border-radius: 100% 0;
-          transform: rotate(-25deg);
-        }
-
-        .ritual-leaf-right {
-          right: -50px;
-          top: 25%;
-          border-right: 1px solid #a98255;
-          border-radius: 0 100%;
-          transform: rotate(25deg);
-        }
-
-        /* PARTICLES */
-
-        .ritual-particles {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        .ritual-particle {
-          position: absolute;
-          display: block;
-          width: 4px;
-          height: 4px;
-          border-radius: 50%;
-          background: #c49a62;
-          box-shadow: 0 0 12px rgba(196, 154, 98, 0.45);
-        }
-
         /* TABLET */
 
         @media (max-width: 1050px) {
-          .ritual-layout-shell {
-            padding: 0 40px;
-          }
-
           .ritual-layout-grid {
-            gap: 28px;
-          }
-
-          .ritual-showcase-card {
-            grid-template-columns: 1fr;
-          }
-
-          .ritual-showcase-copy {
-            padding: 30px;
-          }
-
-          .ritual-showcase-image {
-            min-height: 290px;
-          }
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 640px) {
-          .ritual-showcase {
-            padding: 64px 0;
-          }
-
-          .ritual-layout-shell {
-            padding: 0 20px;
-          }
-
-          .ritual-layout-heading {
-            margin-bottom: 30px;
-          }
-
-          .ritual-heading-emblem {
-            width: 190px;
-            height: 190px;
-            top: -20px;
-            opacity: 0.62;
-          }
-
-          .agni-flames {
-            width: 96%;
-            height: 60%;
-            left: 2%;
-            bottom: 19%;
-          }
-
-          .ritual-layout-heading h2 {
-            font-size: clamp(35px, 10vw, 46px);
-            letter-spacing: -1.4px;
-          }
-
-          .ritual-layout-heading > p {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            margin-top: 15px;
-          }
-
-          .ritual-layout-grid {
-            grid-template-columns: 1fr;
             gap: 24px;
           }
 
           .ritual-showcase-card {
-            grid-template-columns: 1fr 1fr;
-            min-height: 280px;
+            grid-template-columns: 1fr;
+            min-height: 0;
           }
 
           .ritual-showcase-copy {
-            padding: 24px 15px 24px 19px;
+            padding: 28px;
           }
 
-          .ritual-showcase-symbol {
-            width: 51px;
-            height: 51px;
-            margin-bottom: 17px;
+          .ritual-showcase-image {
+            min-height: 250px;
+          }
+        }
+
+        /* MOBILE: KEEP BOTH SERVICE CARDS SIDE BY SIDE */
+
+        @media (max-width: 640px) {
+          .ritual-showcase {
+            padding: 48px 0 54px;
           }
 
-          .ritual-showcase-symbol svg {
-            width: 30px;
-            height: 30px;
+          .ritual-layout-heading {
+            margin-bottom: 24px;
           }
 
-          .ritual-om-symbol {
-            font-size: 31px;
+          .ritual-layout-heading h2 {
+            font-size: clamp(27px, 7.5vw, 36px);
+            line-height: 1.08;
+            letter-spacing: -0.9px;
+          }
+
+          .ritual-layout-heading > p {
+            margin-top: 10px;
+            font-size: 8px;
+            line-height: 1.6;
+            letter-spacing: 1px;
+          }
+
+          .ritual-layout-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            align-items: stretch;
+          }
+
+          .ritual-showcase-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            border-radius: 3px 22px 3px 3px;
+            box-shadow: 0 8px 22px rgba(72, 58, 36, 0.06);
+          }
+
+          .ritual-showcase-image {
+            position: relative;
+            order: 0;
+            display: block;
+            width: 100%;
+            height: clamp(105px, 30vw, 150px);
+            min-height: 0;
+            flex: 0 0 auto;
+          }
+
+          .ritual-showcase-copy {
+            order: 1;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+            padding: 13px 11px 14px;
+            overflow: visible;
           }
 
           .ritual-showcase-copy h3 {
-            font-size: clamp(27px, 7vw, 35px);
+            font-size: clamp(21px, 5.8vw, 29px);
+            line-height: 1;
+            letter-spacing: -0.6px;
+          }
+
+          .ritual-showcase-copy h3 em {
+            margin-top: 2px;
           }
 
           .ritual-showcase-copy p {
+            margin: 9px 0 13px;
             font-size: 10px;
-            line-height: 1.7;
-            margin: 12px 0 18px;
+            line-height: 1.55;
           }
 
           .ritual-showcase-button {
-            gap: 5px;
+            width: 100%;
+            min-height: 38px;
+            justify-content: space-between;
+            gap: 4px;
+            margin-top: auto;
+            padding: 8px 9px;
             font-size: 8px;
+            line-height: 1.25;
             letter-spacing: 0;
           }
 
           .ritual-showcase-button svg {
-            width: 16px;
-            height: 16px;
-          }
-
-          .ritual-showcase-image {
-            min-height: 280px;
+            width: 14px;
+            height: 14px;
+            flex: 0 0 auto;
           }
 
           .ritual-image-caption {
-            left: 10px;
-            bottom: 12px;
+            left: 9px;
+            bottom: 9px;
             font-size: 7px;
             letter-spacing: 1px;
           }
 
-          .ritual-particles {
-            opacity: 0.55;
-          }
-        }
-
-        /* ACCESSIBILITY */
-
-        @media (prefers-reduced-motion: reduce) {
           .ritual-image {
-            transition: none;
-            transform: none !important;
-          }
-
-          .ritual-showcase-card,
-          .ritual-showcase-button,
-          .ritual-showcase-button svg {
-            transition: none;
+            transform: none;
           }
         }
+
+        @media (max-width: 360px) {
+          /* Keep the same 16px outer gutter on compact phones. */
+
+          .ritual-layout-grid {
+            gap: 8px;
+          }
+
+          .ritual-showcase-copy {
+            padding: 11px 9px 12px;
+          }
+
+          .ritual-showcase-copy h3 {
+            font-size: 21px;
+          }
+
+          .ritual-showcase-copy p {
+            font-size: 9px;
+          }
+
+          .ritual-showcase-button {
+            font-size: 8px;
+            padding: 7px 6px;
+          }
+        }
+
       `}</style>
     </section>
   );

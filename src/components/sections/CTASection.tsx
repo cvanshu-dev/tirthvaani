@@ -5,7 +5,7 @@ import { Eyebrow, ImageBlock } from "../shared";
 export function CTASection() {
   return (
     <section className="cta">
-      <ImageBlock src="/hero.jpg" alt="Evening light along the Ganga" />
+      <ImageBlock src="/hero.webp" alt="Evening light along the Ganga" />
       <div className="cta-copy">
         <Eyebrow>BEGIN WITH A CONVERSATION</Eyebrow>
         <h2>Every meaningful journey begins with listening.</h2>

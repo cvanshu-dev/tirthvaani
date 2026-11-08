@@ -57,7 +57,7 @@ export function About() {
               style={{ y: reducedMotion ? 0 : imageY }}
             >
               <Image
-                src="/hero.jpg"
+                src="/hero.webp"
                 alt="Ganga Aarti beside the River Ganga in Varanasi"
                 fill
                 priority
@@ -152,7 +152,7 @@ export function About() {
           {/* CTA */}
           <motion.div variants={reveal}>
             <Link
-              href="/about-us"
+              href="/about"
               className="group inline-flex items-center gap-5 rounded-full bg-[#B65F38] py-2 pl-6 pr-2 text-[#FFF8EF] shadow-[0_6px_18px_rgba(53,75,59,0.10)] transition-all duration-500 hover:-translate-y-1 hover:bg-[#A95130] hover:shadow-[0_12px_25px_rgba(53,75,59,0.16)]"
             >
               <span className="font-serif text-[15px]">

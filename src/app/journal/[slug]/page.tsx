@@ -187,7 +187,7 @@ export default async function Page({
     const articleImageUrl =
       fixedContent?.introImage.url ||
       post.featuredMedia?.url ||
-      "/hero.jpg";
+      "/hero.webp";
 
     const articleImageAlt =
       fixedContent?.introImage.alt ||
@@ -197,7 +197,7 @@ export default async function Page({
     const heroImageUrl =
       post.featuredMedia?.url ||
       fixedContent?.introImage.url ||
-      "/hero.jpg";
+      "/hero.webp";
 
     const heroImageAlt =
       post.featuredMedia?.alt ||

@@ -8,21 +8,21 @@ const articles = [
     slug: "first-visit-varanasi",
     category: "Travel notes",
     readingTime: "6 min read",
-    image: "/hero.jpg",
+    image: "/hero.webp",
   },
   {
     title: "Pind Daan: meaning, setting and preparation",
     slug: "pind-daan-meaning",
     category: "Ritual & remembrance",
     readingTime: "7 min read",
-    image: "/hero.jpg",
+    image: "/hero.webp",
   },
   {
     title: "The quiet significance of the Triveni Sangam",
     slug: "triveni-sangam",
     category: "Sacred places",
     readingTime: "5 min read",
-    image: "/hero.jpg",
+    image: "/hero.webp",
   },
 ];
 

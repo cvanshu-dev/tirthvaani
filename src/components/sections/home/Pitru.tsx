@@ -9,7 +9,7 @@ export function Pitru() {
 
       {/* Background Image */}
       <Image
-        src="/pitru.jpg"
+        src="/pitru.webp"
         alt="Kashi Vishwanath Temple in Varanasi"
         fill
         priority={false}

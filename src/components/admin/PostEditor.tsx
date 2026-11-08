@@ -273,7 +273,7 @@ export function PostEditor({
                 className="admin-input"
                 value={imageUrl}
                 onChange={(event) => setImageUrl(event.target.value)}
-                placeholder="/pitru-rituals.png"
+                placeholder="/pitru-rituals.webp"
               />
             </label>
 

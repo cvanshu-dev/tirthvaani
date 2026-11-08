@@ -180,7 +180,7 @@ export function PageSectionBuilder({ initial }: { initial: Section[] }) {
                 onChange={(event) =>
                   update(section.id, "image", event.target.value)
                 }
-                placeholder="/hero.jpg"
+                placeholder="/hero.webp"
               />
             </label>
           )}

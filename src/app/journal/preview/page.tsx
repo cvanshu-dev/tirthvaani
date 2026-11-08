@@ -44,7 +44,7 @@ export default function JournalPreviewPage() {
   <div className="heritage-post-flow">
     <div className="heritage-post-feature-image">
       <Image
-        src="/pitru-rituals.png"
+        src="/pitru-rituals.webp"
         alt="Pitru Karya ritual being performed in Varanasi"
         width={1000}
         height={1100}

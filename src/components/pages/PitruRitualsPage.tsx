@@ -1,26 +1,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 import { AssignedPosts } from "@/components/content/AssignedPosts";
 
-const ritualImage =
-  "https://www.tirthpurohit.org/public/upload/1774603598_WhatsApp-Image-2021-05-18-at-21.54.47-300x400.jpeg";
+const pitruRitualImage = "/pitru-rituals.webp";
 
 export function PitruRitualsPage() {
   return (
     <main className="pitru-page">
 
       {/* =====================================
-          01. CINEMATIC HERO
+          01. SIMPLE CINEMATIC HERO
       ===================================== */}
 
-      <section className="pitru-hero-v2">
-
+      <section
+        className="pitru-hero-v2 dev-hero-simple"
+        aria-labelledby="pitru-hero-title"
+      >
         <Image
-          src="/hero.jpg"
-          alt="Sacred spiritual rituals being performed in Varanasi"
+          src="/pitru.webp"
+          alt="Sacred ancestral rituals performed on the banks of the Ganga in Varanasi"
           fill
           priority
           sizes="100vw"
@@ -29,58 +29,38 @@ export function PitruRitualsPage() {
 
         <div className="pitru-hero-v2-overlay" />
 
-        <div className="pitru-hero-v2-content">
-
-          <span className="pitru-hero-v2-eyebrow">
-            SACRED RITES OF ANCESTORS
-          </span>
-
-          <h1>
-            Pitru Karya
-            <em>in Varanasi</em>
+        <div className="dev-hero-simple-content">
+          <h1 id="pitru-hero-title">
+            Pitru Karya <em>in Varanasi</em>
           </h1>
-
-          <p>
-            Honour the souls of your ancestors through sacred
-            Vedic rituals in the holy land of Kashi.
-          </p>
-
-          <Link
-            href="/contact?interest=pitru-karya"
-            className="pitru-hero-v2-button"
-          >
-            CONTACT NOW
-            <ArrowUpRight size={17} />
-          </Link>
-
         </div>
       </section>
 
 
       {/* =====================================
-          02. PITRUKARYAS IN VARANASI
+          02. PITRU KARYA INTRODUCTION
       ===================================== */}
 
       <section
         className="pitru-introduction"
         aria-labelledby="pitru-intro-heading"
       >
-
         <div className="pitru-introduction-container">
 
-          {/* Editorial Section Heading */}
+          {/* Section Heading */}
 
           <header className="pitru-introduction-heading">
 
             <span className="pitru-introduction-eyebrow">
-              THE SACRED TRADITION OF ANCESTRAL WORSHIP
+              HONOURING ANCESTORS &amp; PRESERVING TRADITIONS
             </span>
 
             <h2 id="pitru-intro-heading">
-              Pitrukaryas in Varanasi
+              Pitru Karya in Varanasi
             </h2>
 
             {/* Architectural Divider */}
+
             <div className="pitru-heading-divider">
               <span className="pitru-divider-line" />
               <span className="pitru-divider-diamond" />
@@ -90,71 +70,95 @@ export function PitruRitualsPage() {
           </header>
 
 
-          {/* Main Introduction */}
+          {/* Main Content */}
 
           <div className="pitru-introduction-grid">
 
-            <div className="pitru-introduction-copy">
+          
+<div className="pitru-introduction-copy">
 
-              <p className="pitru-opening-paragraph">
-                It is said in <strong>Brahmavaivarta Puran</strong>{" "}
-                that pitrukaryas (worship of ancestors) is considered
-                to be more special in nature than devakaryas
-                (worship of God). Hence, before performing{" "}
-                <Link href="/dev-rituals">
-                  devakaryas in Varanasi
-                </Link>
-                , one must first satisfy one&apos;s dead parents
-                and ancestors.
-              </p>
+  <p className="pitru-opening-paragraph">
+    <strong>Pitru Karya</strong> refers to the sacred rituals
+    performed in remembrance of departed parents and ancestors.
+    In Sanatana Dharma, honouring one's ancestors is considered
+    an important duty. These rituals express gratitude for
+    those who came before us and are performed with prayers
+    for the peace and well-being of their souls.
+  </p>
 
-              <p>
-                TirthVaani ensures the provision of experienced
-                pandits for Pitru Karya in Varanasi. Having more
-                than 500 years of experience in the field, we
-                treat every devotee with importance and provide
-                guidance rooted in traditional Vedic practices.
-              </p>
+  <p>
+    <strong>Varanasi, also known as Kashi</strong>, holds a
+    special place in the performance of ancestral rituals.
+    Situated along the holy River Ganga, this ancient city
+    has been a sacred destination for devotees who come
+    to perform Pitru Karya and fulfil their family traditions.
+  </p>
 
-              <p>
-                In the sacred traditions of Sanatana Dharma,
-                honoring one&apos;s ancestors is not merely a ritual
-                but a sacred duty (<strong>Rina</strong>) that every
-                individual carries from birth. The performance
-                of Pitru Karya is believed to bring peace to the
-                departed souls and remove ancestral obstacles
-                (<strong>Pitru Dosha</strong>) from the lives of
-                their descendants.
-              </p>
+  <p>
+    According to Hindu beliefs, performing ancestral rituals
+    in Kashi is considered especially auspicious. Devotees
+    believe that these ceremonies help bring peace to
+    departed souls and seek their blessings for future
+    generations.
+  </p>
 
-              <p>
-                When these rites are performed in the holy land
-                of Varanasi, on the banks of the divine River
-                Ganga, their spiritual potency is believed to
-                multiply many times.
-              </p>
+  <p>
+    In Hindu tradition, every individual carries a
+    responsibility towards their ancestors, known as
+    <strong> Pitru Rina</strong>. Performing Pitru Karya
+    is one way of acknowledging this responsibility
+    through prayers, offerings, and remembrance.
+    These rituals are also traditionally associated
+    with addressing <strong>Pitru Dosha</strong>.
+  </p>
 
-              <p>
-                Varanasi, also known as Kashi, is regarded as
-                the city of liberation where countless sages,
-                saints, and devotees have performed ancestral
-                rites for thousands of years. Scriptures state
-                that offerings made here reach the ancestors
-                directly and help them attain higher realms
-                and ultimate salvation.
-              </p>
+  <p>
+    Some of the important ancestral ceremonies performed
+    in Varanasi include <strong>Pind Daan</strong>,
+    <strong> Shraddha</strong>, <strong>Tarpan</strong>,
+    and <strong>Tripindi Shraddha</strong>. Each ritual
+    has its own religious significance and is performed
+    according to specific customs and family traditions.
+  </p>
 
-              <p>
-                This is why pilgrims from across the country
-                visit Kashi specifically for <strong>Pind Daan</strong>,
-                <strong> Shraddha</strong>, <strong>Tarpanam</strong>,
-                and other Pitru rituals.
-              </p>
+  <p>
+    These ceremonies involve sacred offerings, prayers,
+    and Vedic rituals performed under the guidance of
+    experienced pandits. The procedures may differ
+    depending on the ceremony, family traditions,
+    and individual requirements.
+  </p>
 
-            </div>
+  <p>
+    At <strong>Tirthvaani</strong>, we help devotees
+    arrange Pitru Karya in Varanasi by connecting them
+    with experienced pandits. We assist with understanding
+    your requirements and arranging the necessary rituals
+    so that you can focus on the spiritual purpose
+    of your visit.
+  </p>
+
+  <p>
+    Whether you wish to perform Pind Daan, Shraddha,
+    Tarpan, or other ancestral ceremonies, Tirthvaani
+    helps make the process simple and convenient,
+    while respecting your family's religious traditions.
+  </p>
+
+  <p>
+    You can also explore our{" "}
+    <Link href="/dev-rituals">
+      Devakarya services in Varanasi
+    </Link>
+    {" "}for other sacred Hindu worship and ceremonies
+    in Kashi.
+  </p>
+
+</div>
 
 
-            {/* Ritual Image */}
+
+            {/* Ritual Photograph */}
 
             <aside className="pitru-introduction-aside">
 
@@ -163,30 +167,35 @@ export function PitruRitualsPage() {
                 <div className="pitru-image-inner-frame">
 
                   <Image
-                    src={ritualImage}
-                    alt="Traditional ancestral rituals being performed in Varanasi"
+                    src={pitruRitualImage}
+                    alt="Traditional Pind Daan offerings with flowers and sacred vessels in Varanasi"
                     width={600}
                     height={800}
-                    unoptimized
                     className="pitru-introduction-image"
                   />
 
                 </div>
 
                 <figcaption>
-                  <span className="pitru-caption-line" />
-                  Sacred offerings performed in remembrance
-                  <span className="pitru-caption-line" />
+                  Ancestral offerings in the sacred city of Kashi.
                 </figcaption>
 
               </figure>
 
+
+              {/* Devotional Note */}
+
               <div className="pitru-image-note">
-                <span className="pitru-note-symbol">॥</span>
+
+                <span className="pitru-note-symbol">
+                  ॥
+                </span>
 
                 <p>
-                  A sacred tradition passed through generations.
+                  Remembering our ancestors with gratitude,
+                  devotion, and sacred traditions.
                 </p>
+
               </div>
 
             </aside>
@@ -195,53 +204,56 @@ export function PitruRitualsPage() {
 
 
           {/* =====================================
-              SANSKRIT VERSE
+              03. SACRED CALLOUT
           ===================================== */}
 
-          <blockquote className="pitru-sacred-verse">
+          <div className="dev-sacred-callout">
 
-            <div className="pitru-verse-topline">
-              <span />
-              <span />
-            </div>
-
-            <span className="pitru-verse-label">
-              FROM THE SACRED SCRIPTURES
+            <span className="dev-callout-eyebrow">
+              THE SPIRIT OF PITRU KARYA
             </span>
 
-            <p className="pitru-verse-first">
-              Devakaryadapi sada
-              <br />
-              pitrukaryam vishishyate
+            <h3>
+              Pitru Devo Bhava
+            </h3>
+
+            <p>
+              Honour those who came before us.
             </p>
 
-            <p className="pitru-verse-second">
-              Devatabhyo hi purvam
-              <br />
-              pitrunamapyayanam varam
-            </p>
-
-            <cite>
-              — Brahmavaivarta Puran
-            </cite>
-
-            <div className="pitru-verse-bottomline">
+            <div className="dev-callout-divider">
               <span />
+              <i />
               <span />
             </div>
 
-          </blockquote>
+            <span className="dev-callout-caption">
+              A timeless tradition of gratitude, remembrance,
+              and respect for our ancestors.
+            </span>
+
+          </div>
 
         </div>
       </section>
 
 
       {/* =====================================
-          03. DYNAMIC BLOG ARTICLES
+          04. DYNAMIC PITRU KARYA BLOG ARTICLES
       ===================================== */}
 
       <AssignedPosts
         pageSlug="pitru-rituals"
+        editorial={{
+          eyebrow: "ANCESTRAL RITUALS & SACRED TRADITIONS",
+          heading: "Explore the World of Pitru Karya",
+          description:
+            "Learn about Pind Daan, Shraddha, Tarpan and other ancestral rituals, their significance and the traditions followed in the sacred city of Kashi.",
+          emptyMessage:
+            "New articles and guides about Pitru Karya will appear here as they are published and assigned to this page.",
+          viewAllHref: "/journal",
+          viewAllLabel: "View all articles",
+        }}
       />
 
     </main>

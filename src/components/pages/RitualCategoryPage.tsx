@@ -21,7 +21,7 @@ export function RitualCategoryPage({
     <main>
       <section className="ritual-listing-hero">
         <Image
-          src="/hero.jpg"
+          src="/hero.webp"
           alt={category.imageAlt}
           fill
           priority

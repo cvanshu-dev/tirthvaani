@@ -4,8 +4,7 @@ import Link from "next/link";
 
 import { AssignedPosts } from "@/components/content/AssignedPosts";
 
-const devRitualImage =
-  "https://www.tirthpurohit.org/public/upload/1774603663_WhatsApp-Image-2021-05-18-at-23.00.13_(1).jpeg";
+const devRitualImage = "/varanasi.webp";
 
 export function DevRitualsPage() {
   return (
@@ -20,7 +19,7 @@ export function DevRitualsPage() {
         aria-labelledby="dev-hero-title"
       >
         <Image
-          src="/hero.jpg"
+          src="/pitru.webp"
           alt="Sacred Hindu worship and spiritual ceremonies in Varanasi"
           fill
           priority
@@ -78,84 +77,113 @@ export function DevRitualsPage() {
             <div className="pitru-introduction-copy">
 
               <p className="pitru-opening-paragraph">
-                <strong>Devakaryas</strong> is an act of religious
-                devotion usually directed to one or more deities
-                in Hindu religion. A sense of <strong>Bhakti</strong>,
-                or devotional love, is generally invoked. This
-                term Bhakti is the most prominent aspect of
-                Hinduism.
+                <strong>Devakaryas</strong> are sacred acts of
+                worship performed to honour Hindu deities and
+                seek their blessings. Rooted in the traditions
+                of Sanatana Dharma, these ceremonies are an
+                expression of <strong>Bhakti</strong> (devotion),
+                faith, and gratitude towards the divine.
               </p>
 
               <p>
-                Devakaryas in Varanasi are performed in order
-                to receive blessings from the gods and to achieve
-                goodwill for the self, family, community, and
-                society as a whole. In fact, Hindus believe in
-                the notion of <strong>Vasudhaiva Kutumbakam</strong>,
-                that the entire world is one family.
+                In Hindu tradition, worship is an important
+                part of everyday life. Devotees perform various
+                pujas and religious ceremonies to seek divine
+                blessings for good health, prosperity, peace,
+                and the well-being of their families. These
+                practices also offer an opportunity to express
+                gratitude and strengthen one's spiritual
+                connection.
               </p>
 
               <p>
-                Worship is not confined to any place of worship;
-                it also incorporates personal reflection, art
-                forms, and group devotion.
+                <strong>Varanasi, also known as Kashi</strong>,
+                holds a special place in Hindu religious
+                traditions. Considered one of the oldest
+                continuously inhabited sacred cities, Kashi
+                is home to numerous temples, shrines, and
+                places of worship. Devotees from across the
+                country visit this holy city to offer prayers
+                and perform religious ceremonies.
               </p>
 
               <p>
-                Hindus usually perform worship to achieve some
-                specific end or to integrate the body, the mind,
-                and the spirit in order to help the performer
-                evolve into a higher being. At TirthVaani, we
-                strive to connect devotees with experienced
-                pandits for Devakaryas in Varanasi, ensuring
-                traditional practices and attentive services.
+                Hindu worship takes many forms, from simple
+                daily prayers and traditional pujas to
+                elaborate ceremonies performed on special
+                occasions. Depending on the purpose of worship,
+                devotees may offer prayers to their
+                <strong> Ishta Devata</strong> (chosen deity),
+                seek blessings from different forms of the
+                divine, or observe specific religious rituals
+                according to their family traditions.
               </p>
 
               <p>
-                Within Hinduism, a large number of personal
-                gods (<strong>Ishta Devatas</strong>) are worshipped
-                as idols. These beings may be the supreme
-                Brahman, Tridevas, Devis, or significantly
-                powerful entities known as Devas.
+                Some of the important forms of Devakarya
+                include <strong>Rudrabhishek</strong>,
+                <strong> Shiva Puja</strong>,
+                <strong> Satyanarayan Katha</strong>,
+                <strong> Ganesh Puja</strong>, and various
+                other traditional ceremonies. Each puja
+                has its own significance, procedure, and
+                purpose, depending on the deity being
+                worshipped and the devotee's requirements.
               </p>
 
               <p>
-                You can worship and offer your prayers to these
-                deities by performing Homam with experienced
-                priests through our{" "}
+                Another important part of Hindu worship
+                is <strong>Havan and Homam</strong>, in
+                which sacred offerings are made into the
+                consecrated fire while Vedic mantras are
+                chanted. These ceremonies are traditionally
+                performed to offer prayers, express devotion,
+                and seek divine blessings. You can arrange
+                these ceremonies through our{" "}
                 <Link href="/book-pandits-for-puja-and-homam-in-varanasi">
                   Homam services in Varanasi
                 </Link>
-                . The exact nature of belief regarding each
-                deity varies between different philosophies.
+                .
               </p>
 
               <p>
-                These deities may be different, but they are
-                generally considered forms of the one God
-                (<strong>Brahman</strong>). These deities and
-                their Pujas provide one of the ways to
-                communicate with this divine presence.
+                Performing Devakaryas in a sacred
+                pilgrimage destination like Kashi holds
+                special significance for many devotees.
+                The city's spiritual atmosphere, ancient
+                temples, and long-standing religious
+                traditions make it an important destination
+                for those wishing to perform pujas and
+                seek the blessings of their chosen deities.
               </p>
 
               <p>
-                Devakaryas in religious and sacred Tirthas
-                are considered even more fruitful because
-                these places are believed to be blessed with
-                divinity all around. Devakaryas should be
-                performed by every person, from whichever
-                part of the country they belong to.
+                At <strong>Tirthvaani</strong>, we help
+                devotees arrange traditional Devakaryas
+                in Varanasi by connecting them with
+                experienced pandits and purohits. Whether
+                you are planning a personal puja, a family
+                ceremony, or a special religious occasion,
+                we assist you in finding the right guidance
+                and making the necessary arrangements.
               </p>
 
               <p>
-                At TirthVaani, we make sure you receive the
-                services you are looking for. We provide
-                experienced purohits for Devakaryas in
-                Varanasi, along with other{" "}
+                From selecting the appropriate ceremony
+                to arranging the pandit and required
+                samagri, our aim is to make your worship
+                experience simple and convenient while
+                respecting your religious beliefs and
+                family traditions.
+              </p>
+
+              <p>
+                Explore our other{" "}
                 <Link href="/pandits-for-rituals-in-kashi">
-                  rituals in Kashi
+                  religious rituals and services in Kashi
                 </Link>
-                {" "}and religious services.
+                {" "}and let Tirthvaani assist you in
+                planning your sacred journey.
               </p>
 
             </div>
@@ -252,7 +280,7 @@ export function DevRitualsPage() {
           eyebrow: "KNOWLEDGE & DIVINE TRADITIONS",
           heading: "Explore the World of Devakaryas",
           description:
-            "Discover Hindu traditions, sacred ceremonies, deities, pujas and the spiritual significance of worship in Kashi.",
+            "Discover Hindu traditions, sacred ceremonies, different forms of worship, pujas and the spiritual significance of performing rituals in Kashi.",
           emptyMessage:
             "New articles and guides about Devakaryas will appear here as they are published and assigned to this page.",
           viewAllHref: "/journal",

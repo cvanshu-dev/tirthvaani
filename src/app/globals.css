@@ -2757,7 +2757,7 @@ h2 em {
 .assigned-post-image-placeholder {
   background:
     linear-gradient(140deg, rgba(34, 30, 24, 0.08), rgba(34, 30, 24, 0.46)),
-    url("/hero.jpg") center 45% / cover;
+    url("/hero.webp") center 45% / cover;
 }
 
 .assigned-post-card:hover .assigned-post-image img,

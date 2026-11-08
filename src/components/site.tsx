@@ -29,7 +29,7 @@ export const defaultNavigation: NavigationLink[] = [
 export function Navigation({
   items,
   brandName = "TirthVaani",
-  logoUrl = "/logo.png",
+  logoUrl = "/logo.webp",
 }: {
   items?: NavigationLink[];
   brandName?: string;
@@ -80,10 +80,10 @@ export function Navigation({
   };
 
   return (
-    <header
-      ref={headerRef}
-      className="sticky top-0 z-[100] w-full px-4 pt-3 sm:px-6 lg:px-8 pointer-events-none"
-    >
+  <header
+  ref={headerRef}
+  className="fixed top-0 left-0 z-[100] w-full px-4 pt-0 sm:px-6 lg:px-8 pointer-events-none"
+>
       {/* MAIN NAVBAR */}
       <div
         className="

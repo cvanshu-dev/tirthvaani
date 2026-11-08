@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
-const GOD_IMAGE = "/shiv.png";
+const GOD_IMAGE = "/shiv.webp";
 
 const petals = Array.from({ length: 16 }, (_, i) => i);
 const rays = Array.from({ length: 96 }, (_, i) => i);
@@ -494,7 +494,7 @@ export function HeroSection() {
         />
 
         <div className="pointer-events-none absolute inset-0 z-[2]">
-          <FluidImageReveal src="/rudrashi.png" />
+          <FluidImageReveal src="/rudrashi.webp" />
         </div>
       </div>
 

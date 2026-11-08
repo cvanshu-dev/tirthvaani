@@ -13,14 +13,14 @@ import { useState } from "react";
 
 const galleryImages = [
   {
-    src: "/hero.jpg",
+    src: "/hero.webp",
     alt: "Sacred rituals performed on the banks of the Ganga",
     category: "Sacred ceremonies",
     title: "A moment of devotion",
     className: "md:col-span-2 md:row-span-2",
   },
   {
-    src: "/gaya.jpg",
+    src: "/gaya.webp",
     alt: "Traditional Hindu puja arrangements",
     category: "Traditions",
     title: "Rooted in tradition",
@@ -92,7 +92,7 @@ export function GallerySection() {
 
   const images = [
     {
-      src: "/hero.jpg",
+      src: "/hero.webp",
       alt: "Sacred pilgrimage and spiritual journey",
       category: "Sacred journeys",
       title: "A journey of faith",
@@ -100,7 +100,7 @@ export function GallerySection() {
       layout: "large",
     },
     {
-      src: "/gaya.jpg",
+      src: "/gaya.webp",
       alt: "Traditional Hindu rituals",
       category: "Sacred traditions",
       title: "Rooted in tradition",

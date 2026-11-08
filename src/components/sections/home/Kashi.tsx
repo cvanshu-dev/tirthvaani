@@ -9,7 +9,7 @@ export function Kashi() {
 
       {/* Background Image */}
       <Image
-        src="/hero.jpg"
+        src="/hero.webp"
         alt="Kashi Vishwanath Temple in Varanasi"
         fill
         priority={false}
