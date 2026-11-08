@@ -63,9 +63,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
         <Suspense fallback={null}>{children}</Suspense>
-        <Suspense fallback={null}>
-          <SiteFooter />
-        </Suspense>
+       <SiteFooter />
       </body>
     </html>
   );

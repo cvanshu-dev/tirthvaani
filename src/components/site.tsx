@@ -113,15 +113,14 @@ export function Navigation({
           aria-label={`${brandName} home`}
           className="relative z-10 flex shrink-0 items-center"
         >
-          <Image
-            src={logoUrl}
-            alt={`${brandName} logo`}
-            width={190}
-            height={60}
-            priority
-            unoptimized
-            className="h-[44px] w-auto object-contain"
-          />
+        <Image
+  src={logoUrl}
+  alt={`${brandName} logo`}
+  width={400}
+  height={267}
+  priority
+  className="h-[44px] w-auto object-contain"
+/>
         </Link>
 
         {/* DESKTOP NAVIGATION */}

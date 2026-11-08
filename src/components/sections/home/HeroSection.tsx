@@ -484,13 +484,13 @@ export function HeroSection() {
 
       {/* Shiva image */}
       <div className="pointer-events-none absolute bottom-[-2%] right-[-3%] z-[1] h-[90%] w-[68%] max-lg:bottom-0 max-lg:right-[-9%] max-lg:h-[47%] max-lg:w-[105%] max-sm:h-[42%]">
-      <Image
+  <Image
   src="/shiv-optimized.webp"
   alt="Lord Shiva"
   fill
   priority
   fetchPriority="high"
-  quality={70}
+  quality={60}
   sizes="(max-width: 768px) 100vw, 68vw"
   className="pointer-events-none object-contain object-bottom drop-shadow-[0_15px_25px_rgba(91,48,25,0.12)]"
 />
