@@ -8,7 +8,7 @@ const navigationItems: NavigationLink[] = [
 
   { label: "Pitru Karyas", href: "/pitru-rituals" },
   { label: "Dev Karyas", href: "/dev-rituals" },
-  
+  { label: "Homam", href: "/homam" },
 
   { label: "Journal", href: "/journal" },
   { label: "Contact", href: "/contact" },
